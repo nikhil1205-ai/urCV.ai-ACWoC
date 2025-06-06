@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { FileText, User, Edit } from "lucide-react";
@@ -6,9 +5,9 @@ import { Link } from "react-router-dom";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 overflow-hidden">
       {/* Navigation */}
-      <nav className="container mx-auto px-4 py-6">
+      <nav className="container mx-auto px-4 py-6 animate-fade-in">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
@@ -29,32 +28,34 @@ const Index = () => {
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-20">
         <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight animate-fade-in">
             Build Your Perfect
-            <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent animate-pulse">
               AI-Enhanced Resume
             </span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed animate-fade-in-delayed">
             Create stunning, ATS-friendly resumes in minutes. Our AI analyzes your content 
             and suggests improvements to help you stand out from the crowd.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-scale-in">
             <Link to="/builder">
-              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 hover:-translate-y-1">
                 Start Building Now
               </Button>
             </Link>
-            <Button size="lg" variant="outline" className="border-2 border-gray-300 hover:border-blue-500 px-8 py-4 rounded-lg transition-all duration-300">
-              View Templates
-            </Button>
+            <Link to="/templates">
+              <Button size="lg" variant="outline" className="border-2 border-gray-300 hover:border-blue-500 px-8 py-4 rounded-lg transition-all duration-300 transform hover:scale-105">
+                View Templates
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
 
       {/* Features Section */}
       <div className="container mx-auto px-4 py-16">
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Why Choose urCV.ai?
           </h2>
@@ -64,8 +65,8 @@ const Index = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          <Card className="p-8 text-center hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-0 shadow-lg">
-            <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+          <Card className="p-8 text-center hover:shadow-xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 border-0 shadow-lg animate-slide-in-left">
+            <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 transform transition-transform duration-300 hover:rotate-12">
               <User className="w-8 h-8 text-white" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-4">Smart Input Forms</h3>
@@ -74,8 +75,8 @@ const Index = () => {
             </p>
           </Card>
 
-          <Card className="p-8 text-center hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-0 shadow-lg">
-            <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+          <Card className="p-8 text-center hover:shadow-xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 border-0 shadow-lg animate-fade-in animation-delay-200">
+            <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 transform transition-transform duration-300 hover:rotate-12">
               <Edit className="w-8 h-8 text-white" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-4">AI Enhancement</h3>
@@ -84,8 +85,8 @@ const Index = () => {
             </p>
           </Card>
 
-          <Card className="p-8 text-center hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-0 shadow-lg">
-            <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+          <Card className="p-8 text-center hover:shadow-xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 border-0 shadow-lg animate-slide-in-right">
+            <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6 transform transition-transform duration-300 hover:rotate-12">
               <FileText className="w-8 h-8 text-white" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-4">Professional Templates</h3>
@@ -97,7 +98,7 @@ const Index = () => {
       </div>
 
       {/* CTA Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 py-16">
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 py-16 animate-fade-in">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Ready to Build Your Dream Resume?
@@ -121,7 +122,7 @@ const Index = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8">
+      <footer className="bg-gray-900 text-white py-8 animate-fade-in">
         <div className="container mx-auto px-4 text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <div className="w-6 h-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">

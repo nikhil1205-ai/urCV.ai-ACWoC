@@ -1,31 +1,132 @@
+
+import { useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import Index from "./pages/Index";
 import Builder from "./pages/Builder";
 import NotFound from "./pages/NotFound";
 import Templates from "./pages/Templates";
+import LoadingScreen from "./components/LoadingScreen";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/builder" element={<Builder />} />
-          <Route path="/templates" element={<Templates />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const AnimatedRoutes = () => {
+  const location = useLocation();
+
+  const pageVariants = {
+    initial: {
+      opacity: 0,
+      y: 20,
+      scale: 0.98
+    },
+    in: {
+      opacity: 1,
+      y: 0,
+      scale: 1
+    },
+    out: {
+      opacity: 0,
+      y: -20,
+      scale: 1.02
+    }
+  };
+
+  const pageTransition = {
+    type: "tween",
+    ease: "anticipate",
+    duration: 0.5
+  };
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route
+          path="/"
+          element={
+            <motion.div
+              initial="initial"
+              animate="in"
+              exit="out"
+              variants={pageVariants}
+              transition={pageTransition}
+            >
+              <Index />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/builder"
+          element={
+            <motion.div
+              initial="initial"
+              animate="in"
+              exit="out"
+              variants={pageVariants}
+              transition={pageTransition}
+            >
+              <Builder />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/templates"
+          element={
+            <motion.div
+              initial="initial"
+              animate="in"
+              exit="out"
+              variants={pageVariants}
+              transition={pageTransition}
+            >
+              <Templates />
+            </motion.div>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <motion.div
+              initial="initial"
+              animate="in"
+              exit="out"
+              variants={pageVariants}
+              transition={pageTransition}
+            >
+              <NotFound />
+            </motion.div>
+          }
+        />
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
+const App = () => {
+  const [showLoading, setShowLoading] = useState(true);
+
+  const handleLoadingComplete = () => {
+    setShowLoading(false);
+  };
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        {showLoading ? (
+          <LoadingScreen onComplete={handleLoadingComplete} />
+        ) : (
+          <BrowserRouter>
+            <AnimatedRoutes />
+          </BrowserRouter>
+        )}
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
