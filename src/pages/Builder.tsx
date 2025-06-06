@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileText, ArrowLeft, ArrowRight, Bot, MessageCircle } from "lucide-react";
+import { FileText, ArrowLeft, ArrowRight, Bot } from "lucide-react";
 import { Link } from "react-router-dom";
 import PersonalInfoForm from "@/components/resume/PersonalInfoForm";
 import EducationForm from "@/components/resume/EducationForm";
@@ -10,7 +10,6 @@ import ExperienceForm from "@/components/resume/ExperienceForm";
 import SkillsForm from "@/components/resume/SkillsForm";
 import ResumePreview from "@/components/resume/ResumePreview";
 import ResumeAnalysisComponent from "@/components/resume/ResumeAnalysis";
-import ChatBot from "@/components/resume/ChatBot";
 import ResumeGenerator from "@/components/resume/ResumeGenerator";
 import FloatingChatBot from "@/components/FloatingChatBot";
 
@@ -143,15 +142,11 @@ const Builder = () => {
           {/* Form Section */}
           <Card className="lg:col-span-2 p-6 shadow-xl border-0">
             <Tabs defaultValue="form" className="w-full">
-              <TabsList className="grid w-full grid-cols-4">
+              <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="form">Resume Form</TabsTrigger>
                 <TabsTrigger value="analysis">
                   <Bot className="w-4 h-4 mr-2" />
                   AI Analysis
-                </TabsTrigger>
-                <TabsTrigger value="chat">
-                  <MessageCircle className="w-4 h-4 mr-2" />
-                  AI Chat
                 </TabsTrigger>
                 <TabsTrigger value="generate">Generate</TabsTrigger>
               </TabsList>
@@ -205,10 +200,6 @@ const Builder = () => {
                   onEnhance={handleEnhanceResume}
                   onExtractedData={handleExtractedData}
                 />
-              </TabsContent>
-
-              <TabsContent value="chat" className="mt-6">
-                <ChatBot resumeContext={getResumeContext()} />
               </TabsContent>
 
               <TabsContent value="generate" className="mt-6">
