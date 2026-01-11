@@ -1,84 +1,176 @@
-# urCV.ai - Intelligent Resume Builder
+# urCV.ai – Intelligent Resume Builder
 
 ![urCV.ai Hero](docs/images/screenshot1.png)
 
-**urCV.ai** is a state-of-the-art, AI-powered resume builder designed to help job seekers create professional, ATS-friendly resumes in minutes. Leveraging the power of Google's Gemini AI, urCV.ai offers intelligent content suggestions, professional templates, and real-time career advice through an integrated chatbot.
+**urCV.ai** is a state-of-the-art, AI-powered resume builder designed to help job seekers create professional, ATS-friendly resumes in minutes.  
+It leverages a **dual-engine AI architecture** — combining **Groq (Llama 3)** for instant resume analysis and **Google Gemini 2.5** for intelligent career advice.
+
+---
 
 ## 🚀 Key Features
 
-*   **🤖 AI-Powered Content Generation:** utilizing Google's Gemini-1.5-Flash model to generate professional summaries and career advice.
-*   **🎨 Professional Templates:** diverse collection of templates tailored for different industries (Modern, Professional, Creative, Executive).
-*   **💬 Intelligent Career Assistant:** integrated AI chatbot to answer your career queries and provide resume tips.
-*   **📱 Fully Responsive Design:** seamless experience across all devices, from desktops to mobile phones.
-*   **📄 Real-Time Preview:** see changes instantly as you build your resume.
-*   **⬇️ Multiple Export Formats:** download your resume in high-quality formats.
+- **🤖 AI-Powered Resume Intelligence**
+  - Groq + Llama 3 for fast resume scoring and analysis
+  - Google Gemini 2.5 for smart rewriting and career guidance
 
-## � Screenshots
+- **🎨 Professional Resume Templates**
+  - Modern
+  - Professional
+  - Creative
+  - Executive
 
-### Professional Templates
-![Templates Page](docs/images/screenshot3.png)
+- **💬 Intelligent Career Assistant**
+  - Context-aware chatbot
+  - Resume improvement suggestions
+  - Career and interview advice
 
-### Intelligent Builder
+- **📄 Real-Time Resume Preview**
+  - Live split-screen editing
+  - Instant updates while typing
+
+- **📱 Fully Responsive Design**
+  - Works seamlessly on desktop, tablet, and mobile devices
+
+- **⬇️ Multiple Export Formats**
+  - High-quality PDF
+  - Editable DOCX (Word)
+  - ATS-friendly output
+
+---
+
+## 📸 Screenshots
+
+### 🌟 Application Hero
+![Hero View](docs/images/screenshot1.png)
+
+### 🛠️ Intelligent Builder
 ![Builder Interface](docs/images/screenshot2.png)
 
-### Template Selection
+### 🧩 Professional Templates
+![Templates Page](docs/images/screenshot3.png)
+
+### 👔 Executive Resume Design
+![Executive Template](docs/images/screenshot4.png)
+
+### 🎯 Template Selection
 ![Template Selection](docs/images/screenshot5.png)
 
-### Executive Designs
-![Executive Template](docs/images/screenshot4.png)
+---
 
 ## 🛠️ Tech Stack
 
-*   **Frontend:** [React](https://reactjs.org/) + [Vite](https://vitejs.dev/)
-*   **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-*   **AI Integration:** [Google Generative AI SDK](https://www.npmjs.com/package/@google/generative-ai)
-*   **Icons:** [Lucide React](https://lucide.dev/)
-*   **UI Components:** Custom built with Shadcn/UI inspiration
+### Frontend
+- **Framework:** React + Vite
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **UI Components:** Shadcn/UI (customized)
+- **Icons:** Lucide React
+
+### AI & Services
+- **Resume Analysis:** Groq SDK (Llama 3)
+- **Career Assistant:** Google Generative AI SDK (Gemini 2.5)
+- **File Parsing:** mammoth
+- **Document Export:** PDF & DOCX generation services
+
+---
 
 ## 🏁 Getting Started
 
-Follow these steps to set up the project locally.
-
 ### Prerequisites
-
-*   Node.js (v18 or higher)
-*   npm or yarn
+- Node.js **v18 or higher**
+- npm or yarn
 
 ### Installation
 
-1.  **Clone the repository**
-    ```bash
-    git clone https://github.com/yourusername/urCV.ai.git
-    cd urCV.ai
-    ```
+#### 1️⃣ Clone the repository
+```bash
+git clone https://github.com/yourusername/urCV.ai.git
+cd urCV.ai
+2️⃣ Install dependencies
+bash
+Copy code
+npm install
+3️⃣ Configure Environment Variables
+Create a .env file in the root directory:
 
-2.  **Install dependencies**
-    ```bash
-    npm install
-    ```
+env
+Copy code
+VITE_GEMINI_API_KEY=your_gemini_api_key_here
+# Optional for production use
+# VITE_GROQ_API_KEY=your_groq_api_key_here
+4️⃣ Run the development server
+bash
+Copy code
+npm run dev
+Open http://localhost:8080 in your browser.
 
-3.  **Configure Environment Variables**
-    Create a `.env` file in the root directory and add your Gemini API key:
-    ```env
-    VITE_GEMINI_API_KEY=your_api_key_here
-    ```
+📂 Project Structure
+text
+Copy code
+urCV.ai/
+├── docs/
+│   └── images/                 # Screenshots and assets
+├── public/                     # Static assets (icons, robots.txt)
+├── src/
+│   ├── components/
+│   │   ├── layout/             # Header, Footer
+│   │   ├── resume/             # Core builder components
+│   │   │   ├── forms/          # Input forms (Education, Experience, Skills)
+│   │   │   ├── templates/      # Resume designs (Modern, Creative, Professional)
+│   │   │   ├── ChatBot.tsx     # Gemini-powered career assistant
+│   │   │   ├── ResumeAnalysis.tsx # Groq-powered scoring engine
+│   │   │   ├── ResumeGenerator.tsx # PDF/DOCX export logic
+│   │   │   ├── ResumePreview.tsx   # Live resume preview
+│   │   │   └── aiprompt.ts     # Gemini API prompts
+│   │   └── ui/                 # Reusable UI components (Shadcn/UI)
+│   ├── hooks/                  # Custom hooks
+│   ├── lib/                    # Utility helpers (clsx, tw-merge)
+│   ├── pages/                  # Application routes
+│   │   ├── Builder.tsx         # Main resume builder
+│   │   ├── Index.tsx           # Landing page
+│   │   ├── Templates.tsx       # Template selection
+│   │   └── NotFound.tsx        # 404 page
+│   ├── services/
+│   │   ├── documentService.ts  # DOCX/PDF generation
+│   │   ├── fileParserService.ts # Resume file parsing
+│   │   └── groqService.ts      # Groq (Llama 3) integration
+│   ├── App.tsx                 # Root component
+│   └── main.tsx                # Application entry point
+├── .gitignore
+├── components.json             # Shadcn UI config
+├── eslint.config.js            # ESLint configuration
+├── index.html                  # HTML entry
+├── package.json                # Dependencies & scripts
+├── postcss.config.js           # PostCSS config
+├── tailwind.config.ts          # Tailwind CSS config
+├── tsconfig.json               # TypeScript config
+└── vite.config.ts              # Vite build config
+🤝 Contributing
+Contributions are welcome!
 
-4.  **Run the development server**
-    ```bash
-    npm run dev
-    ```
+Fork the repository
 
-5.  Open [http://localhost:8080](http://localhost:8080) to view the application in your browser.
+Create a new branch
 
-## 🤝 Contributing
+bash
+Copy code
+git checkout -b feature/YourFeature
+Commit your changes
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+bash
+Copy code
+git commit -m "Add YourFeature"
+Push to GitHub
 
-## 📄 License
+bash
+Copy code
+git push origin feature/YourFeature
+Open a Pull Request
 
-This project is developed under the **AcWoc 2026 Initiative**.
-Copyright © 2026 **N-PCs**. All rights reserved.
+📄 License
+This project is developed under the AcWoc 2026 Initiative.
 
-<div align="center">
-  <p>Maintained by <a href="mailto:neelpandeyofficial@gmail.com">Neel Pandey</a></p>
-</div>
+Copyright © 2026 N-PCs
+All rights reserved.
+
+<p align="center"> Maintained by <strong>Neel Pandey</strong> </p> ```
