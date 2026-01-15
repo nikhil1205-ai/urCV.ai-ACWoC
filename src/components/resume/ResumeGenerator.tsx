@@ -43,12 +43,12 @@ const ResumeGenerator = ({ data, templateName }: ResumeGeneratorProps) => {
   const generatePDFResume = async () => {
     setIsGenerating(true);
     try{
-      const pdfBlob = generatePDF(data);
+      const pdfBlob = generatePDF(data, templateName);
       downloadFile(pdfBlob, `${data.personalInfo.fullName || 'resume'}.pdf`);
 
       toast({
         title: "PDF Generated",
-        description: "Your resume has been downloaded as a text-based PDF!",
+        description: `Your resume has been downloaded in the ${templateName} style!`,
       });
     }catch (error) {
       console.error(error);

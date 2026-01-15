@@ -175,114 +175,416 @@ export const generateWordDocument = async (resumeData: ResumeData): Promise<Blob
   return await Packer.toBlob(doc);
 };
 
-export const generatePDF = (resumeData: ResumeData): Blob => {
+export const generatePDF = (resumeData: ResumeData, templateName: string = 'default'): Blob => {
   const doc = new jsPDF();
+
+  switch (templateName) {
+    case 'modern':
+      renderModernTemplate(doc, resumeData);
+      break;
+    case 'professional':
+      renderProfessionalTemplate(doc, resumeData);
+      break;
+    case 'creative':
+      renderCreativeTemplate(doc, resumeData);
+      break;
+    default:
+      renderDefaultTemplate(doc, resumeData);
+      break;
+  }
+
+  return doc.output('blob');
+};
+const renderDefaultTemplate = (doc: jsPDF, data: ResumeData) => {
   const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
   const margin = 20;
-  const maxLineWidth = pageWidth - margin*2;
   let yPos = 20;
-  
-  const addText = (text: string, fontSize: number = 10, isBold: boolean = false) => {
+
+  const addText = (text: string, fontSize: number = 10, isBold: boolean = false, maxWidth?: number) => {
     if(!text) return;
 
     doc.setFontSize(fontSize);
     doc.setFont("helvetica", isBold ? "bold" : "normal");
 
-    const splitText = doc.splitTextToSize(text, maxLineWidth);
-    const lineHeight = fontSize * 0.5;
-    
-    if(yPos + (splitText.length * lineHeight) > pageHeight - margin){
-      doc.addPage();
-      yPos = margin;
-    }
+    const lines = doc.splitTextToSize(text, maxWidth || (pageWidth - margin * 2));
+    doc.text(lines, margin, yPos);
+    yPos += (lines.length * fontSize * 0.5) + 2;
+  };
 
-    doc.text(splitText, margin,yPos);
-    yPos += (splitText.length * lineHeight) + 2;
-  }
+  addText(data.personalInfo.fullName, 22, true);
+  const contact = [
+    data.personalInfo.email, 
+    data.personalInfo.phone, 
+    data.personalInfo.location, 
+    data.personalInfo.linkedin]
+    .filter(Boolean)
+    .join(" | ");
 
-  const addSectionTitle = (title: string) => {
-    yPos += 5;
-    addText(title, 14, true);
-    doc.setLineWidth(0.5);
-    doc.line(margin, yPos - 5, pageWidth - margin, yPos - 5);
-    yPos += 1;
-  }
-
-  addText(resumeData.personalInfo.fullName, 22, true);
-
-  const contactParts = [
-    resumeData.personalInfo.email,
-    resumeData.personalInfo.phone,
-    resumeData.personalInfo.location,
-    resumeData.personalInfo.linkedin
-  ].filter(Boolean);
-
-  if (contactParts.length > 0) {
-    addText(contactParts.join(" | "), 10);
-  }
+  addText(contact, 10);
   yPos += 5;
 
-  if (resumeData.personalInfo.summary) {
-    addSectionTitle("Professional Summary");
-    addText(resumeData.personalInfo.summary, 10);
+  if (data.personalInfo.summary) {
+    addText("Professional Summary", 14, true);
+    doc.line(margin, yPos - 6, pageWidth - margin, yPos - 6);
+    addText(data.personalInfo.summary, 10);
+    yPos += 5;
   }
 
-  if (resumeData.experience.length > 0) {
-    addSectionTitle("Experience");
-    resumeData.experience.forEach(exp => {
-      addText(`${exp.title} at ${exp.company}`, 11, true);
-      addText(`${exp.location} | ${exp.startDate} - ${exp.current ? 'Present' : exp.endDate}`, 9);
-      if (exp.description) {
-        addText(exp.description, 10);
-      }
+  if (data.experience.length > 0) {
+    addText("Experience", 14, true);
+    doc.line(margin, yPos - 6, pageWidth - margin, yPos - 6);
+    data.experience.forEach(exp => {
+      addText(`${exp.title} - ${exp.company}`, 11, true);
+      addText(`${exp.startDate} - ${exp.current ? 'Present' : exp.endDate} | ${exp.location}`, 9);
+      if (exp.description) addText(exp.description, 10);
       yPos += 3;
     });
   }
 
-  if (resumeData.education.length > 0) {
-    addSectionTitle("Education");
-    resumeData.education.forEach(edu => {
+  if (data.education.length > 0) {
+    addText("Education", 14, true);
+    doc.line(margin, yPos - 6, pageWidth - margin, yPos - 6);
+    data.education.forEach(edu => {
       addText(`${edu.degree} - ${edu.school}`, 11, true);
-      addText(`${edu.location} | ${edu.graduationDate}`, 9);
-      if (edu.gpa) {
-        addText(`GPA: ${edu.gpa}`, 10);
-      }
+      addText(`${edu.graduationDate} | ${edu.location}`, 9);
+      if (edu.gpa) addText(`GPA: ${edu.gpa}`, 10);
       yPos += 3;
     });
   }
 
-  const hasSkills = resumeData.skills.technical.length > 0 || 
-                    resumeData.skills.languages.length > 0 || 
-                    resumeData.skills.certifications.length > 0;
-
-  if (hasSkills) {
-    addSectionTitle("Skills");
-    
-    if (resumeData.skills.technical.length > 0) {
-      addText("Technical Skills: " + resumeData.skills.technical.join(", "), 10);
-    }
-    if (resumeData.skills.languages.length > 0) {
-      addText("Languages: " + resumeData.skills.languages.join(", "), 10);
-    }
-    if (resumeData.skills.certifications.length > 0) {
-      addText("Certifications: " + resumeData.skills.certifications.join(", "), 10);
-    }
-  }
+  const skillsList = [
+      ...data.skills.technical, 
+      ...data.skills.languages, 
+      ...data.skills.certifications
+  ];
   
-  if (resumeData.codingProfiles) {
-    const profiles = Object.entries(resumeData.codingProfiles).filter(([_, url]) => url);
-    if (profiles.length > 0) {
-      addSectionTitle("Coding Profiles");
-      profiles.forEach(([platform, url]) => {
-        addText(`${platform.charAt(0).toUpperCase() + platform.slice(1)}: ${url}`, 10);
-      });
-    }
+  if (skillsList.length > 0) {
+      addText("Skills", 14, true);
+      doc.line(margin, yPos - 6, pageWidth - margin, yPos - 6);
+      
+      if(data.skills.technical.length) addText("Technical: " + data.skills.technical.join(", "), 10);
+      if(data.skills.languages.length) addText("Languages: " + data.skills.languages.join(", "), 10);
+      if(data.skills.certifications.length) addText("Certifications: " + data.skills.certifications.join(", "), 10);
+  }
+};
+
+const renderModernTemplate = (doc: jsPDF, data: ResumeData) => {
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const margin = 20;
+  let yPos = 20;
+
+  // Header
+  doc.setTextColor(37, 99, 235); // Blue
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(24);
+  doc.text(data.personalInfo.fullName.toUpperCase(), margin, yPos);
+  yPos += 8;
+  
+  doc.setDrawColor(37, 99, 235);
+  doc.setLineWidth(1);
+  doc.line(margin, yPos, pageWidth - margin, yPos);
+  yPos += 6;
+
+  doc.setTextColor(80, 80, 80);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  const contact = [data.personalInfo.email, data.personalInfo.phone, data.personalInfo.location].filter(Boolean).join("  •  ");
+  doc.text(contact, margin, yPos);
+  yPos += 10;
+
+  if (data.personalInfo.summary) {
+    const lines = doc.splitTextToSize(data.personalInfo.summary, pageWidth - margin * 2);
+    doc.text(lines, margin, yPos);
+    yPos += (lines.length * 5) + 10;
   }
 
-  return doc.output('blob')
-}
+  // Two Column Layout
+  const colGap = 10;
+  const leftColWidth = (pageWidth - margin * 2) * 0.65;
+  const rightColX = margin + leftColWidth + colGap;
+  const rightColWidth = (pageWidth - margin * 2) * 0.35;
+  
+  let leftY = yPos;
+  let rightY = yPos;
 
+  // LEFT COLUMN: Experience & Education
+  if (data.experience.length > 0) {
+    doc.setTextColor(37, 99, 235);
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("EXPERIENCE", margin, leftY);
+    leftY += 6;
+    doc.setTextColor(0, 0, 0);
+
+    data.experience.forEach(exp => {
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text(exp.title, margin, leftY);
+      leftY += 5;
+      
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(80, 80, 80);
+      doc.text(`${exp.company} | ${exp.startDate} - ${exp.current ? 'Present' : exp.endDate}`, margin, leftY);
+      leftY += 5;
+      
+      doc.setTextColor(0, 0, 0);
+      if (exp.description) {
+         const lines = doc.splitTextToSize(exp.description, leftColWidth);
+         doc.text(lines, margin, leftY);
+         leftY += (lines.length * 4) + 6;
+      } else {
+        leftY += 4;
+      }
+    });
+  }
+
+  if (data.education.length > 0) {
+    leftY += 5;
+    doc.setTextColor(37, 99, 235);
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("EDUCATION", margin, leftY);
+    leftY += 6;
+    doc.setTextColor(0, 0, 0);
+
+    data.education.forEach(edu => {
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.text(edu.school, margin, leftY);
+      leftY += 5;
+      
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.text(`${edu.degree}`, margin, leftY);
+      leftY += 5;
+      doc.setTextColor(80, 80, 80);
+      doc.text(`${edu.graduationDate}`, margin, leftY);
+      leftY += 8;
+      doc.setTextColor(0, 0, 0);
+    });
+  }
+
+  // RIGHT COLUMN: Skills
+  if (data.skills.technical.length > 0 || data.skills.languages.length > 0) {
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("SKILLS", rightColX, rightY);
+    rightY += 6;
+    
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    const techSkills = doc.splitTextToSize(data.skills.technical.join(", "), rightColWidth);
+    doc.text(techSkills, rightColX, rightY);
+    rightY += (techSkills.length * 5) + 6;
+
+    if (data.skills.languages.length > 0) {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text("LANGUAGES", rightColX, rightY);
+        rightY += 6;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        data.skills.languages.forEach(lang => {
+            doc.text(`• ${lang}`, rightColX, rightY);
+            rightY += 5;
+        });
+    }
+  }
+};
+
+const renderProfessionalTemplate = (doc: jsPDF, data: ResumeData) => {
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 20;
+    let yPos = 20;
+
+    doc.setFont("times", "bold");
+    doc.setFontSize(20);
+    doc.text(data.personalInfo.fullName.toUpperCase(), pageWidth / 2, yPos, { align: "center" });
+    yPos += 6;
+
+    doc.setFont("times", "normal");
+    doc.setFontSize(10);
+    const contact = [data.personalInfo.email, data.personalInfo.phone, data.personalInfo.location].filter(Boolean).join(" | ");
+    doc.text(contact, pageWidth / 2, yPos, { align: "center" });
+    if(data.personalInfo.linkedin) {
+        yPos += 5;
+        doc.text(data.personalInfo.linkedin, pageWidth / 2, yPos, { align: "center" });
+    }
+    yPos += 10;
+
+    const addSection = (title: string) => {
+        doc.setFont("times", "bold");
+        doc.setFontSize(12);
+        doc.text(title.toUpperCase(), margin, yPos);
+        yPos += 2;
+        doc.setLineWidth(0.5);
+        doc.line(margin, yPos, pageWidth - margin, yPos);
+        yPos += 6;
+    };
+
+    if (data.personalInfo.summary) {
+        addSection("Professional Summary");
+        doc.setFont("times", "normal");
+        doc.setFontSize(11);
+        const lines = doc.splitTextToSize(data.personalInfo.summary, pageWidth - margin * 2);
+        doc.text(lines, margin, yPos);
+        yPos += (lines.length * 5) + 6;
+    }
+
+    if (data.experience.length > 0) {
+        addSection("Work Experience");
+        data.experience.forEach(exp => {
+            doc.setFont("times", "bold");
+            doc.setFontSize(11);
+            doc.text(exp.title, margin, yPos);
+            doc.setFont("times", "italic");
+            doc.text(`${exp.startDate} - ${exp.current ? "Present" : exp.endDate}`, pageWidth - margin, yPos, { align: "right" });
+            yPos += 5;
+
+            doc.setFont("times", "bold"); // Company bold in professional usually
+            doc.text(exp.company, margin, yPos);
+            doc.setFont("times", "normal");
+            doc.text(exp.location, pageWidth - margin, yPos, { align: "right" });
+            yPos += 5;
+
+            if (exp.description) {
+                doc.setFont("times", "normal");
+                const lines = doc.splitTextToSize(exp.description, pageWidth - margin * 2);
+                doc.text(lines, margin, yPos);
+                yPos += (lines.length * 5) + 4;
+            } else {
+                yPos += 4;
+            }
+        });
+    }
+
+    if (data.education.length > 0) {
+        addSection("Education");
+        data.education.forEach(edu => {
+            doc.setFont("times", "bold");
+            doc.text(edu.school, margin, yPos);
+            doc.setFont("times", "normal");
+            doc.text(edu.graduationDate, pageWidth - margin, yPos, { align: "right" });
+            yPos += 5;
+
+            doc.setFont("times", "italic");
+            doc.text(edu.degree, margin, yPos);
+            doc.setFont("times", "normal");
+            doc.text(edu.location, pageWidth - margin, yPos, { align: "right" });
+            yPos += 8;
+        });
+    }
+
+    if(data.skills.technical.length > 0) {
+        addSection("Skills");
+        doc.setFont("times", "normal");
+        const lines = doc.splitTextToSize(`Technical: ${data.skills.technical.join(", ")}`, pageWidth - margin * 2);
+        doc.text(lines, margin, yPos);
+    }
+};
+
+const renderCreativeTemplate = (doc: jsPDF, data: ResumeData) => {
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    
+    // Sidebar Background
+    const sidebarWidth = pageWidth * 0.35;
+    doc.setFillColor(15, 23, 42); // Slate 900
+    doc.rect(0, 0, sidebarWidth, pageHeight, 'F');
+
+    // Sidebar Content (White text)
+    doc.setTextColor(255, 255, 255);
+    let sideY = 30;
+    const sideMargin = 10;
+
+    // Initials Circle
+    doc.setDrawColor(100, 116, 139);
+    doc.setLineWidth(1);
+    doc.circle(sidebarWidth/2, sideY + 10, 15, 'S');
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(30);
+    doc.text(data.personalInfo.fullName.charAt(0) || "U", sidebarWidth/2, sideY + 13, { align: "center" });
+    sideY += 40;
+
+    // Contact
+    doc.setFontSize(12);
+    doc.text("CONTACT", sideMargin, sideY);
+    sideY += 6;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    if(data.personalInfo.email) { doc.text(data.personalInfo.email, sideMargin, sideY); sideY += 5; }
+    if(data.personalInfo.phone) { doc.text(data.personalInfo.phone, sideMargin, sideY); sideY += 5; }
+    if(data.personalInfo.location) { doc.text(data.personalInfo.location, sideMargin, sideY); sideY += 5; }
+    sideY += 10;
+
+    // Skills Sidebar
+    if(data.skills.technical.length > 0) {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text("SKILLS", sideMargin, sideY);
+        sideY += 6;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        data.skills.technical.forEach(skill => {
+            doc.text(`• ${skill}`, sideMargin, sideY);
+            sideY += 5;
+        });
+        sideY += 10;
+    }
+
+    // MAIN CONTENT (Right side)
+    const mainMargin = sidebarWidth + 15;
+    const mainWidth = pageWidth - mainMargin - 15;
+    let mainY = 30;
+    doc.setTextColor(15, 23, 42); // Slate 900 for headings
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(28);
+    const nameLines = doc.splitTextToSize(data.personalInfo.fullName, mainWidth);
+    doc.text(nameLines, mainMargin, mainY);
+    mainY += (nameLines.length * 10) + 10;
+
+    if (data.personalInfo.summary) {
+        doc.setFontSize(14);
+        doc.text("Profile", mainMargin, mainY);
+        mainY += 6;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.setTextColor(60, 60, 60);
+        const lines = doc.splitTextToSize(data.personalInfo.summary, mainWidth);
+        doc.text(lines, mainMargin, mainY);
+        mainY += (lines.length * 5) + 10;
+    }
+
+    if (data.experience.length > 0) {
+        doc.setTextColor(15, 23, 42);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text("Experience", mainMargin, mainY);
+        mainY += 8;
+
+        data.experience.forEach(exp => {
+            doc.setFontSize(12);
+            doc.text(exp.title, mainMargin, mainY);
+            mainY += 5;
+            
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.setTextColor(100, 116, 139);
+            doc.text(`${exp.company} | ${exp.startDate} - ${exp.current ? 'Present' : exp.endDate}`, mainMargin, mainY);
+            mainY += 5;
+
+            doc.setTextColor(60, 60, 60);
+            if(exp.description) {
+                const lines = doc.splitTextToSize(exp.description, mainWidth);
+                doc.text(lines, mainMargin, mainY);
+                mainY += (lines.length * 5) + 6;
+            }
+        });
+    }
+};
 
 export const downloadFile = (blob: Blob, filename: string) => {
   const url = URL.createObjectURL(blob);
