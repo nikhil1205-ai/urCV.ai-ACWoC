@@ -184,12 +184,13 @@ export const generatePDFFromElement = async (element: HTMLElement): Promise<Blob
   const height = rect.height || element.scrollHeight || 1000;
   
   const canvas = await html2canvas(element, {
+    scale: 2,
     useCORS: true,
     allowTaint: true,
     background: '#ffffff',
     width: width,
     height: height
-  });
+  } as any);
 
   const imgData = canvas.toDataURL('image/png');
   const pdf = new jsPDF('p', 'mm', 'a4');
