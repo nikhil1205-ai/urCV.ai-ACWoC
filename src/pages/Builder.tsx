@@ -25,6 +25,7 @@ export interface ResumeData {
     phone: string;
     location: string;
     linkedin: string;
+    portfolio: string; 
     summary: string;
   };
   education: Array<{
@@ -71,6 +72,7 @@ const Builder = () => {
       phone: "+1 (555) 012-3456",
       location: "San Francisco, CA",
       linkedin: "linkedin.com/in/alexmorgan",
+      portfolio:"alexmorgan.com",
       summary: "Innovative and results-oriented professional with a strong background in technology and design. Skilled in project management, team leadership, and creative problem-solving. Committed to delivering high-quality solutions and driving business growth.",
     },
     education: [
