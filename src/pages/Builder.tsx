@@ -120,6 +120,33 @@ const Builder = () => {
   const [templateName, setTemplateName] = useState<'default' | 'modern' | 'professional' | 'creative' | 'minimalist' | 'bold'>('default');
   const [showGenerateModal, setShowGenerateModal] = useState(false);
 
+    // Sliding window state
+  const [leftWidth, setLeftWidth] = useState(60); // percentage
+  const [isResizing, setIsResizing] = useState(false);
+
+  const startResize = () => setIsResizing(true);
+  const stopResize = () => setIsResizing(false);
+
+  const handleResize = (e: MouseEvent) => {
+  if (!isResizing || e.buttons !== 1) return;
+
+  const newWidth = (e.clientX / window.innerWidth) * 100;
+  if (newWidth > 30 && newWidth < 75) {
+    setLeftWidth(newWidth);
+  }
+};
+
+
+  if (isResizing) {
+    window.addEventListener("mousemove", handleResize);
+    window.addEventListener("mouseup", stopResize);
+  } else {
+    window.removeEventListener("mousemove", handleResize);
+    window.removeEventListener("mouseup", stopResize);
+  }
+
+
+
   const steps = [
     { title: "Personal Info", component: PersonalInfoForm },
     { title: "Education", component: EducationForm },
@@ -236,9 +263,12 @@ const Builder = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 pb-8">
-        <div className="grid lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+        <div className="flex gap-0 max-w-full mx-auto relative">
           {/* Form Section */}
-          <Card className="lg:col-span-2 p-6 shadow-md border-0 dark:bg-gray-900 dark:border-gray-800 animate-slide-in-left">
+          <Card
+            style={{ width: `${leftWidth}%` }}
+            className="p-6 shadow-md border-0 dark:bg-gray-900 dark:border-gray-800 animate-slide-in-left transition-none"
+          >
             <Tabs defaultValue="form" className="w-full">
               <TabsList className="grid w-full grid-cols-3 transition-all duration-300 dark:bg-gray-800">
                 <TabsTrigger value="form" className="transition-all duration-200 hover:scale-105 dark:data-[state=active]:bg-gray-700">Resume Form</TabsTrigger>
@@ -330,8 +360,21 @@ const Builder = () => {
             </Tabs>
           </Card>
 
+        <div
+          onMouseDown={startResize}
+          onDoubleClick={(e) => e.preventDefault()}
+          className="w-2 cursor-col-resize bg-gray-300 dark:bg-gray-700 hover:bg-blue-500 transition-colors select-none"
+          style={{ userSelect: "none" }}
+        />
+
+
+
           {/* Preview Section */}
-          <Card className="shadow-md border-0 animate-slide-in-right overflow-hidden flex flex-col h-full bg-gray-100">
+          <Card
+              style={{ width: `${100 - leftWidth}%` }}
+              className="shadow-md border-0 animate-slide-in-right overflow-hidden flex flex-col h-screen bg-gray-100 transition-none"
+            >
+
             <div className="p-4 bg-white border-b border-gray-200">
               <h2 className="text-xl font-bold text-gray-900 mb-2">Design & Preview</h2>
               <div className="mb-2">
