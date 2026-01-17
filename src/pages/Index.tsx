@@ -141,7 +141,7 @@ const Index = () => {
         {/* GridScan Background */}
         <div className="absolute inset-0 z-0 flex items-center justify-center">
           <div className="w-full h-full max-w-[1400px] mx-auto">
-            <GridScan
+            <GridScan 
               sensitivity={0.55}
               lineThickness={0}
               linesColor="rgba(0, 0, 0, 0.15)"
