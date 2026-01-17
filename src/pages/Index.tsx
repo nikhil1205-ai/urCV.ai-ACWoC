@@ -199,54 +199,65 @@ const Index = () => {
       <ReviewForm onReviewSubmitted={handleReviewSubmitted} />
 
       {/* CTA Section with Logo Loop */}
-      <div className="bg-gradient-to-br from-slate-900 to-blue-900 py-20 animate-fade-in">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+      <section className="relative overflow-hidden py-20 sm:py-24 animate-fade-in">
+        {/* Layered background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950" />
+        <div className="absolute -top-24 left-1/2 h-72 w-[42rem] -translate-x-1/2 rounded-full bg-blue-600/20 blur-3xl" />
+        <div className="absolute -bottom-28 left-8 h-72 w-72 rounded-full bg-fuchsia-500/10 blur-3xl" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(59,130,246,0.18),transparent_45%),radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.14),transparent_55%)]" />
+
+        <div className="relative container mx-auto px-4 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold tracking-wide text-slate-200 backdrop-blur-md">
+            <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_0_4px_rgba(16,185,129,0.12)]" />
+            Built for speed, accessibility, and great UX
+          </div>
+
+          <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-extrabold text-white">
             Built with Modern Technology
           </h2>
-          <p className="text-xl text-slate-300 mb-12 max-w-2xl mx-auto">
-            Our platform leverages cutting-edge tools to deliver the best resume building experience
+          <p className="mt-4 text-base sm:text-lg md:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
+            A carefully picked stack that keeps the app fast, responsive, and easy to maintain.
           </p>
 
-          {/* Main Horizontal Logo Loop */}
-          <div className="mb-16">
-            <div>
+          <div className="mt-12 space-y-6">
+            {/* Main Horizontal Logo Loop */}
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6 backdrop-blur-md shadow-[0_20px_80px_-40px_rgba(0,0,0,0.9)]">
               <LogoLoop
                 logos={techLogos}
-                speed={100} // Increased speed for better visibility
+                speed={95}
                 direction="left"
                 width="100%"
-                logoHeight={60}
-                gap={80}
+                logoHeight={46}
+                gap={52}
                 fadeOut={true}
-                fadeOutColor="#0f172a"
+                fadeOutColor="#020617"
                 scaleOnHover={true}
                 pauseOnHover={true}
+                pauseOnFocus={true}
                 ariaLabel="Technology logos carousel"
               />
             </div>
-          </div>
 
-          {/* Optional: Reverse Direction Loop */}
-          <div className="mb-16">
-            <div>
+            {/* Reverse Direction Loop */}
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6 backdrop-blur-md">
               <LogoLoop
-                logos={[...techLogos].reverse()} // Reverse order for variety
-                speed={80}
+                logos={[...techLogos].reverse()}
+                speed={75}
                 direction="right"
                 width="100%"
-                logoHeight={50}
-                gap={60}
+                logoHeight={40}
+                gap={44}
                 fadeOut={true}
-                fadeOutColor="#0f172a"
+                fadeOutColor="#020617"
                 scaleOnHover={true}
                 pauseOnHover={false}
+                pauseOnFocus={true}
                 ariaLabel="Technology logos carousel reverse"
               />
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       <Footer />
     </div>
@@ -254,3 +265,4 @@ const Index = () => {
 };
 
 export default Index;
+
