@@ -27,6 +27,7 @@ export interface ResumeData {
     linkedin: string;
     portfolio: string; 
     summary: string;
+    photoUrl: string
   };
   education: Array<{
     id: string;
@@ -72,8 +73,9 @@ const Builder = () => {
       phone: "+1 (555) 012-3456",
       location: "San Francisco, CA",
       linkedin: "linkedin.com/in/alexmorgan",
-      portfolio:"alexmorgan.com",
+      portfolio: "alexmorgan.com",
       summary: "Innovative and results-oriented professional with a strong background in technology and design. Skilled in project management, team leadership, and creative problem-solving. Committed to delivering high-quality solutions and driving business growth.",
+      photoUrl: ""
     },
     education: [
       {
@@ -107,11 +109,15 @@ const Builder = () => {
 
     codingProfiles: {
       github: "",
-      leetcode: ""
+      leetcode: "",
+      hackerrank: "",
+      codeforces: "",
+      kaggle: "",
+      codechef: ""
     },
   });
 
-  const [templateName, setTemplateName] = useState<'default' | 'modern' | 'professional' | 'creative'>('default');
+  const [templateName, setTemplateName] = useState<'default' | 'modern' | 'professional' | 'creative' | 'minimalist' | 'bold'>('default');
   const [showGenerateModal, setShowGenerateModal] = useState(false);
 
     // Sliding window state
@@ -364,7 +370,6 @@ const Builder = () => {
 
 
           {/* Preview Section */}
-          {/* Preview Section */}
           <Card
               style={{ width: `${100 - leftWidth}%` }}
               className="shadow-md border-0 animate-slide-in-right overflow-hidden flex flex-col h-screen bg-gray-100 transition-none"
@@ -374,7 +379,7 @@ const Builder = () => {
               <h2 className="text-xl font-bold text-gray-900 mb-2">Design & Preview</h2>
               <div className="mb-2">
                 <label className="block text-xs font-medium text-gray-700 mb-2">Choose Template</label>
-                <div className="grid grid-cols-4 gap-2">
+                <div className="grid grid-cols-3 gap-2">
                   <Button
                     variant={templateName === 'default' ? 'default' : 'outline'}
                     className="text-[10px] h-8 px-2"
@@ -402,6 +407,20 @@ const Builder = () => {
                     onClick={() => setTemplateName('creative')}
                   >
                     Creative
+                  </Button>
+                  <Button
+                    variant={templateName === 'minimalist' ? 'default' : 'outline'}
+                    className="text-[10px] h-8 px-2"
+                    onClick={() => setTemplateName('minimalist')}
+                  >
+                    Minimal
+                  </Button>
+                  <Button
+                    variant={templateName === 'bold' ? 'default' : 'outline'}
+                    className="text-[10px] h-8 px-2"
+                    onClick={() => setTemplateName('bold')}
+                  >
+                    Bold
                   </Button>
                 </div>
               </div>

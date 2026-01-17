@@ -2,16 +2,20 @@ import { ResumeData } from "@/pages/Builder";
 import ModernTemplate from "./templates/ModernTemplate";
 import ProfessionalTemplate from "./templates/ProfessionalTemplate";
 import CreativeTemplate from "./templates/CreativeTemplate";
+import MinimalistTemplate from "./templates/MinimalistTemplate";
+import BoldTemplate from "./templates/BoldTemplate";
 
 interface ResumePreviewProps {
   data: ResumeData;
-  templateName?: 'default' | 'modern' | 'professional' | 'creative';
+  templateName?: 'default' | 'modern' | 'professional' | 'creative' | 'minimalist' | 'bold';
 }
 
 const ResumePreview = ({ data, templateName = 'default' }: ResumePreviewProps) => {
   if (templateName === 'modern') return <ModernTemplate data={data} />;
   if (templateName === 'professional') return <ProfessionalTemplate data={data} />;
   if (templateName === 'creative') return <CreativeTemplate data={data} />;
+  if (templateName === 'minimalist') return <MinimalistTemplate data={data} />;
+  if (templateName === 'bold') return <BoldTemplate data={data} />;
 
   // Default Template (Original Design)
   return (
@@ -38,6 +42,16 @@ const ResumePreview = ({ data, templateName = 'default' }: ResumePreviewProps) =
               className="hover:text-blue-600 hover:underline transition-colors"
             >
               {data.personalInfo.linkedin}
+            </a>
+          )}
+          {data.personalInfo.portfolio && (
+            <a
+              href={data.personalInfo.portfolio.startsWith('http') ? data.personalInfo.portfolio : `https://${data.personalInfo.portfolio}`}
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-blue-600 hover:underline transition-colors"
+            >
+              {data.personalInfo.portfolio}
             </a>
           )}
         </div>
@@ -135,15 +149,15 @@ const ResumePreview = ({ data, templateName = 'default' }: ResumePreviewProps) =
         </div>
       )}
 
-      {(data.codingProfiles?.github || data.codingProfiles?.leetcode) && (
+      {Object.entries(data.codingProfiles || {}).filter(([_, url]) => url).length > 0 && (
         <div className="mb-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-3">Coding Profiles</h2>
           <div className="grid grid-cols-2 gap-4">
-             {Object.entries(data.codingProfiles).map(([key, value]) => (
+             {Object.entries(data.codingProfiles || {}).map(([key, value]) => (
                value && (
                  <div key={key}>
                    <span className="font-medium text-gray-800 capitalize block">{key}</span>
-                   <a href={value.startsWith('http') ? value : `https://${value}`} target="_blank" rel="noreferrer" className="text-blue-600 text-sm hover:underline">
+                   <a href={value.startsWith('http') ? value : `https://${value}`} target="_blank" rel="noreferrer" className="text-blue-600 text-sm hover:underline break-all">
                      {value}
                    </a>
                  </div>
