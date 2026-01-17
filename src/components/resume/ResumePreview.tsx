@@ -2,16 +2,20 @@ import { ResumeData } from "@/pages/Builder";
 import ModernTemplate from "./templates/ModernTemplate";
 import ProfessionalTemplate from "./templates/ProfessionalTemplate";
 import CreativeTemplate from "./templates/CreativeTemplate";
+import MinimalistTemplate from "./templates/MinimalistTemplate";
+import BoldTemplate from "./templates/BoldTemplate";
 
 interface ResumePreviewProps {
   data: ResumeData;
-  templateName?: 'default' | 'modern' | 'professional' | 'creative';
+  templateName?: 'default' | 'modern' | 'professional' | 'creative' | 'minimalist' | 'bold';
 }
 
 const ResumePreview = ({ data, templateName = 'default' }: ResumePreviewProps) => {
   if (templateName === 'modern') return <ModernTemplate data={data} />;
   if (templateName === 'professional') return <ProfessionalTemplate data={data} />;
   if (templateName === 'creative') return <CreativeTemplate data={data} />;
+  if (templateName === 'minimalist') return <MinimalistTemplate data={data} />;
+  if (templateName === 'bold') return <BoldTemplate data={data} />;
 
   // Default Template (Original Design)
   return (
