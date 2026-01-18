@@ -1,10 +1,7 @@
-import {
-  Mail,
-  Heart,
-} from "lucide-react";
+import { Mail, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
-import CurvedLoop from '@/components/CurvedLoop';
+import CurvedLoop from "@/components/CurvedLoop";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -21,7 +18,7 @@ const Footer = () => {
     <footer className="bg-slate-950 text-slate-200 border-t border-slate-800 relative overflow-hidden">
       {/* CurvedLoop as Background */}
       <div className="absolute top-[-20%] left-0 right-0 bottom-0 z-0 opacity-10">
-        <CurvedLoop 
+        <CurvedLoop
           marqueeText="Be ✦ Creative ✦ With ✦ urCV.ai ✦"
           speed={2}
           curveAmount={-300}
@@ -45,7 +42,8 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-slate-400 text-sm leading-relaxed">
-              AI-powered resume builder that creates ATS-friendly resumes in minutes.
+              AI-powered resume builder that creates ATS-friendly resumes in
+              minutes.
             </p>
           </div>
 
@@ -60,8 +58,8 @@ const Footer = () => {
                       item === "Home"
                         ? "/"
                         : item === "Documentation"
-                        ? "https://github.com/N-PCs/urCV.ai/blob/main/README.md"
-                        : `/${item.toLowerCase()}`
+                          ? "https://github.com/N-PCs/urCV.ai/blob/main/README.md"
+                          : `/${item.toLowerCase()}`
                     }
                     className="text-slate-400 hover:text-blue-400 transition-colors"
                   >
@@ -109,7 +107,9 @@ const Footer = () => {
 
         {/* Tech Stack Tags */}
         <div className="mb-6">
-          <p className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">Built with</p>
+          <p className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">
+            Built with
+          </p>
           <div className="flex flex-wrap gap-2">
             {techStack.map((tech) => (
               <span
@@ -131,7 +131,8 @@ const Footer = () => {
           </div>
           <span className="hidden md:inline text-slate-700">•</span>
           <div className="text-slate-500 text-sm flex items-center justify-center gap-1">
-            Made with <Heart className="w-3 h-3 text-red-500 fill-red-500" /> by Neel Pandey and Other Contributors
+            Made with <Heart className="w-3 h-3 text-red-500 fill-red-500" /> by
+            Neel Pandey and Other Contributors
           </div>
         </div>
       </div>

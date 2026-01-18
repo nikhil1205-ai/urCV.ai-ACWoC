@@ -11,10 +11,16 @@ import {
   Sheet,
   SheetContent,
   SheetTrigger,
-  SheetClose
+  SheetClose,
 } from "@/components/ui/sheet";
 
-type Category = "All" | "Professional" | "Creative" | "Executive" | "Minimalist" | "Bold";
+type Category =
+  | "All"
+  | "Professional"
+  | "Creative"
+  | "Executive"
+  | "Minimalist"
+  | "Bold";
 
 const Templates = () => {
   const headerRef = useRef(null);
@@ -29,8 +35,8 @@ const Templates = () => {
       description: "Clean and modern design perfect for tech professionals",
       image: "/Resume1.webp",
       category: "Professional" as Category,
-      type: 'modern',
-      color: "from-blue-500 to-cyan-500"
+      type: "modern",
+      color: "from-blue-500 to-cyan-500",
     },
     {
       id: 2,
@@ -38,8 +44,8 @@ const Templates = () => {
       description: "Eye-catching design for creative professionals",
       image: "/Resume2.jpg",
       category: "Creative" as Category,
-      type: 'creative',
-      color: "from-purple-500 to-pink-500"
+      type: "creative",
+      color: "from-purple-500 to-pink-500",
     },
     {
       id: 3,
@@ -48,7 +54,7 @@ const Templates = () => {
       image: "/Resume3.jpg",
       category: "Executive" as Category,
       type: "professional",
-      color: "from-gray-500 to-gray-700"
+      color: "from-gray-500 to-gray-700",
     },
     {
       id: 4,
@@ -57,7 +63,7 @@ const Templates = () => {
       image: "/Resume4.jpg",
       category: "Minimalist" as Category,
       type: "minimalist",
-      color: "from-emerald-500 to-teal-500"
+      color: "from-emerald-500 to-teal-500",
     },
     {
       id: 5,
@@ -66,7 +72,7 @@ const Templates = () => {
       image: "/Resume5.jpg",
       category: "Bold" as Category,
       type: "bold",
-      color: "from-red-500 to-orange-500"
+      color: "from-red-500 to-orange-500",
     },
     {
       id: 6,
@@ -75,7 +81,7 @@ const Templates = () => {
       image: "/Resume6.jpg",
       category: "Professional" as Category,
       type: "modern",
-      color: "from-blue-600 to-indigo-600"
+      color: "from-blue-600 to-indigo-600",
     },
     {
       id: 7,
@@ -84,7 +90,7 @@ const Templates = () => {
       image: "/Resume4.jpg",
       category: "Bold" as Category,
       type: "bold",
-      color: "from-purple-600 to-pink-600"
+      color: "from-purple-600 to-pink-600",
     },
     {
       id: 8,
@@ -92,19 +98,33 @@ const Templates = () => {
       description: "High-end executive resume with clean typography",
       image: "/Resume5.jpg",
       category: "Executive" as Category,
-      type: 'professional',
-      color: "from-emerald-500 to-teal-500"
+      type: "professional",
+      color: "from-emerald-500 to-teal-500",
     },
   ];
 
-  const categories: Category[] = ["All", "Professional", "Creative", "Executive", "Minimalist", "Bold"];
+  const categories: Category[] = [
+    "All",
+    "Professional",
+    "Creative",
+    "Executive",
+    "Minimalist",
+    "Bold",
+  ];
 
-  const filteredTemplates = selectedCategory === "All" 
-    ? templates 
-    : templates.filter(template => template.category === selectedCategory);
+  const filteredTemplates =
+    selectedCategory === "All"
+      ? templates
+      : templates.filter((template) => template.category === selectedCategory);
 
   // TemplateCard Component
-  const TemplateCard = ({ template, index }: { template: typeof templates[0], index: number }) => {
+  const TemplateCard = ({
+    template,
+    index,
+  }: {
+    template: (typeof templates)[0];
+    index: number;
+  }) => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -113,16 +133,18 @@ const Templates = () => {
         ref={ref}
         initial={{ opacity: 0, y: 50 }}
         animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-        transition={{ 
-          duration: 0.6, 
+        transition={{
+          duration: 0.6,
           delay: index * 0.15,
-          ease: [0.22, 1, 0.36, 1] 
+          ease: [0.22, 1, 0.36, 1],
         }}
       >
         <Card className="overflow-hidden transition-all duration-500 border-0 dark:border dark:border-gray-800 shadow-xl group flex flex-col h-full dark:bg-gray-900 hover:shadow-2xl relative">
           {/* Gradient overlay on hover */}
-          <div className={`absolute inset-0 bg-gradient-to-br ${template.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500 z-10 pointer-events-none`} />
-          
+          <div
+            className={`absolute inset-0 bg-gradient-to-br ${template.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500 z-10 pointer-events-none`}
+          />
+
           {/* Image Container */}
           <div className="aspect-[3/4] bg-gray-200 dark:bg-gray-800 relative overflow-hidden">
             <motion.img
@@ -132,9 +154,9 @@ const Templates = () => {
               whileHover={{ scale: 1.1 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             />
-            
+
             {/* Overlay on hover */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               whileHover={{ opacity: 1 }}
               transition={{ duration: 0.3 }}
@@ -171,14 +193,14 @@ const Templates = () => {
           {/* Content */}
           <div className="p-6 flex-1 flex flex-col relative z-20">
             <div className="flex items-center justify-between mb-3">
-              <motion.h3 
+              <motion.h3
                 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300"
                 whileHover={{ x: 5 }}
                 transition={{ duration: 0.2 }}
               >
                 {template.name}
               </motion.h3>
-              <motion.span 
+              <motion.span
                 whileHover={{ scale: 1.1 }}
                 className={`text-xs px-2.5 py-1 bg-gradient-to-r ${template.color} text-white rounded-full font-medium shadow-sm`}
               >
@@ -265,7 +287,7 @@ const Templates = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950 font-sans transition-colors duration-300">
       {/* Animated Navigation */}
-      <motion.nav 
+      <motion.nav
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -274,7 +296,7 @@ const Templates = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center space-x-2 group">
-              <motion.div 
+              <motion.div
                 transition={{ duration: 0.6 }}
                 className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden"
               >
@@ -284,14 +306,17 @@ const Templates = () => {
                 urCV.ai
               </span>
             </Link>
-            
+
             <div className="flex items-center space-x-1">
               <Link to="/">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button variant="ghost" className="flex items-center space-x-1 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-gray-800 transition-all duration-300">
+                  <Button
+                    variant="ghost"
+                    className="flex items-center space-x-1 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-gray-800 transition-all duration-300"
+                  >
                     <ArrowLeft className="w-4 h-4" />
                   </Button>
                 </motion.div>
@@ -331,7 +356,7 @@ const Templates = () => {
           {[...Array(15)].map((_, i) => (
             <motion.div
               key={i}
-              initial={{ 
+              initial={{
                 opacity: 0,
                 x: Math.random() * 100 - 50,
                 y: Math.random() * 100 - 50,
@@ -360,17 +385,21 @@ const Templates = () => {
         <div ref={headerRef} className="text-center mb-16 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
-            animate={isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+            animate={
+              isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
+            }
             transition={{ duration: 0.8, delay: 0.2 }}
             className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/50 dark:to-purple-900/50 text-blue-700 dark:text-blue-300 rounded-full text-xs font-semibold mb-6 tracking-wider uppercase shadow-md"
           >
             <Sparkles className="w-4 h-4" />
             Premium Collection
           </motion.div>
-          
-          <motion.h1 
+
+          <motion.h1
             initial={{ opacity: 0, y: 30 }}
-            animate={isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+            animate={
+              isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
+            }
             transition={{ duration: 0.8, delay: 0.3 }}
             className="text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-6 leading-tight"
           >
@@ -378,10 +407,10 @@ const Templates = () => {
             <motion.span
               initial={{ backgroundPosition: "0% 50%" }}
               animate={{ backgroundPosition: "200% 50%" }}
-              transition={{ 
-                duration: 5, 
-                repeat: Infinity, 
-                ease: "linear" 
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: "linear",
               }}
               className="block bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent"
               style={{ backgroundSize: "200% 100%" }}
@@ -389,14 +418,17 @@ const Templates = () => {
               Resume Template
             </motion.span>
           </motion.h1>
-          
-          <motion.p 
+
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
-            animate={isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            animate={
+              isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+            }
             transition={{ duration: 0.8, delay: 0.5 }}
             className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed"
           >
-            Select from our professionally designed templates and customize them to create your perfect resume
+            Select from our professionally designed templates and customize them
+            to create your perfect resume
           </motion.p>
         </div>
 
@@ -422,7 +454,9 @@ const Templates = () => {
         {/* Category Filter - Mobile Indicator */}
         <div className="md:hidden flex items-center justify-center mb-8">
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Filter:</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">
+              Filter:
+            </span>
             <Button
               variant="outline"
               size="sm"

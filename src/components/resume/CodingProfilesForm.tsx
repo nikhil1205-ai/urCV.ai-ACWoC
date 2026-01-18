@@ -12,38 +12,41 @@ interface CodingProfilesFormProps {
 
 const CodingProfilesForm = ({ data, updateData }: CodingProfilesFormProps) => {
   const handleInputChange = (field: string, value: string) => {
-    updateData('codingProfiles', {
+    updateData("codingProfiles", {
       ...data.codingProfiles,
-      [field]: value
+      [field]: value,
     });
   };
 
   const getPlatformUrl = (platformId: string, username: string) => {
-    if (!username) return '';
-    
+    if (!username) return "";
+
     // Remove any protocol or domain part if user entered full URL
     let cleanUsername = username.trim();
-    
+
     // Extract username from URL if full URL is provided
-    if (cleanUsername.includes('.')) {
+    if (cleanUsername.includes(".")) {
       // Extract the username part from various URL formats
-      const urlParts = cleanUsername.split('/');
-      cleanUsername = urlParts[urlParts.length - 1] || urlParts[urlParts.length - 2] || cleanUsername;
+      const urlParts = cleanUsername.split("/");
+      cleanUsername =
+        urlParts[urlParts.length - 1] ||
+        urlParts[urlParts.length - 2] ||
+        cleanUsername;
     }
-    
+
     // Construct platform-specific URLs
     switch (platformId) {
-      case 'github':
+      case "github":
         return `https://github.com/${cleanUsername}`;
-      case 'leetcode':
+      case "leetcode":
         return `https://leetcode.com/${cleanUsername}`;
-      case 'hackerrank':
+      case "hackerrank":
         return `https://hackerrank.com/${cleanUsername}`;
-      case 'codeforces':
+      case "codeforces":
         return `https://codeforces.com/profile/${cleanUsername}`;
-      case 'kaggle':
+      case "kaggle":
         return `https://kaggle.com/${cleanUsername}`;
-      case 'codechef':
+      case "codechef":
         return `https://codechef.com/users/${cleanUsername}`;
       default:
         return `https://${cleanUsername}`;
@@ -52,18 +55,42 @@ const CodingProfilesForm = ({ data, updateData }: CodingProfilesFormProps) => {
 
   const openLink = (platformId: string, username: string) => {
     if (!username) return;
-    
+
     const url = getPlatformUrl(platformId, username);
-    window.open(url, '_blank');
+    window.open(url, "_blank");
   };
 
   const platforms = [
-    { id: 'github', label: 'GitHub', placeholder: 'username or github.com/username' },
-    { id: 'leetcode', label: 'LeetCode', placeholder: 'username or leetcode.com/username' },
-    { id: 'hackerrank', label: 'HackerRank', placeholder: 'username or hackerrank.com/username' },
-    { id: 'codeforces', label: 'CodeForces', placeholder: 'username or codeforces.com/profile/username' },
-    { id: 'kaggle', label: 'Kaggle', placeholder: 'username or kaggle.com/username' },
-    { id: 'codechef', label: 'CodeChef', placeholder: 'username or codechef.com/users/username' }
+    {
+      id: "github",
+      label: "GitHub",
+      placeholder: "username or github.com/username",
+    },
+    {
+      id: "leetcode",
+      label: "LeetCode",
+      placeholder: "username or leetcode.com/username",
+    },
+    {
+      id: "hackerrank",
+      label: "HackerRank",
+      placeholder: "username or hackerrank.com/username",
+    },
+    {
+      id: "codeforces",
+      label: "CodeForces",
+      placeholder: "username or codeforces.com/profile/username",
+    },
+    {
+      id: "kaggle",
+      label: "Kaggle",
+      placeholder: "username or kaggle.com/username",
+    },
+    {
+      id: "codechef",
+      label: "CodeChef",
+      placeholder: "username or codechef.com/users/username",
+    },
   ];
 
   return (
@@ -71,14 +98,17 @@ const CodingProfilesForm = ({ data, updateData }: CodingProfilesFormProps) => {
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-gray-900">Coding Profiles</h3>
         <p className="text-sm text-gray-500">
-          Showcase your problem-solving skills by linking your coding profiles. 
+          Showcase your problem-solving skills by linking your coding profiles.
           Enter your username or full profile URL.
         </p>
       </div>
 
       <Card className="p-6 space-y-4">
         {platforms.map((platform) => {
-          const value = data.codingProfiles?.[platform.id as keyof typeof data.codingProfiles] || '';
+          const value =
+            data.codingProfiles?.[
+              platform.id as keyof typeof data.codingProfiles
+            ] || "";
           return (
             <div key={platform.id} className="grid w-full items-center gap-1.5">
               <Label htmlFor={platform.id}>{platform.label}</Label>
@@ -86,11 +116,13 @@ const CodingProfilesForm = ({ data, updateData }: CodingProfilesFormProps) => {
                 <Input
                   id={platform.id}
                   value={value}
-                  onChange={(e) => handleInputChange(platform.id, e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange(platform.id, e.target.value)
+                  }
                   placeholder={platform.placeholder}
                 />
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="icon"
                   onClick={() => openLink(platform.id, value)}
                   disabled={!value}

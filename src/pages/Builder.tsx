@@ -2,7 +2,15 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileText, ArrowLeft, ArrowRight, Bot, Home, LayoutTemplate, CheckCircle } from "lucide-react";
+import {
+  FileText,
+  ArrowLeft,
+  ArrowRight,
+  Bot,
+  Home,
+  LayoutTemplate,
+  CheckCircle,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -17,7 +25,12 @@ import FullPreviewModal from "@/components/resume/FullPreviewModal";
 import FloatingChatBot from "@/components/FloatingChatBot";
 import CodingProfilesForm from "@/components/resume/CodingProfilesForm";
 import HobbiesForm from "@/components/resume/HobbiesForm";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { ResumeDownloadOptions } from "@/components/resume/ResumeGenerator";
 
 export interface ResumeData {
@@ -27,9 +40,9 @@ export interface ResumeData {
     phone: string;
     location: string;
     linkedin: string;
-    portfolio: string; 
+    portfolio: string;
     summary: string;
-    photoUrl: string
+    photoUrl: string;
   };
   education: Array<{
     id: string;
@@ -75,8 +88,9 @@ const Builder = () => {
       location: "San Francisco, CA",
       linkedin: "linkedin.com/in/alexmorgan",
       portfolio: "alexmorgan.com",
-      summary: "Innovative and results-oriented professional with a strong background in technology and design. Skilled in project management, team leadership, and creative problem-solving. Committed to delivering high-quality solutions and driving business growth.",
-      photoUrl: ""
+      summary:
+        "Innovative and results-oriented professional with a strong background in technology and design. Skilled in project management, team leadership, and creative problem-solving. Committed to delivering high-quality solutions and driving business growth.",
+      photoUrl: "",
     },
     education: [
       {
@@ -85,8 +99,8 @@ const Builder = () => {
         school: "University of Technology",
         location: "San Francisco, CA",
         graduationDate: "May 2022",
-        gpa: "3.8"
-      }
+        gpa: "3.8",
+      },
     ],
     experience: [
       {
@@ -97,8 +111,9 @@ const Builder = () => {
         startDate: "Jun 2022",
         endDate: "Present",
         current: true,
-        description: "Led a team of developers in building scalable web applications. Implemented new features and optimized existing code for better performance."
-      }
+        description:
+          "Led a team of developers in building scalable web applications. Implemented new features and optimized existing code for better performance.",
+      },
     ],
     skills: {
       technical: ["React", "TypeScript", "Node.js", "AWS"],
@@ -112,14 +127,16 @@ const Builder = () => {
       hackerrank: "",
       codeforces: "",
       kaggle: "",
-      codechef: ""
+      codechef: "",
     },
   });
 
-  const [templateName, setTemplateName] = useState<'default' | 'modern' | 'professional' | 'creative' | 'minimalist' | 'bold'>('default');
+  const [templateName, setTemplateName] = useState<
+    "default" | "modern" | "professional" | "creative" | "minimalist" | "bold"
+  >("default");
   const [showGenerateModal, setShowGenerateModal] = useState(false);
   const [showFullPreview, setShowFullPreview] = useState(false);
-  
+
   // Mobile state for preview visibility
   const [showMobilePreview, setShowMobilePreview] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -129,11 +146,11 @@ const Builder = () => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   // Desktop sliding window state - only used on desktop
@@ -184,9 +201,9 @@ const Builder = () => {
   };
 
   const updateResumeData = (section: keyof ResumeData, data: any) => {
-    setResumeData(prev => ({
+    setResumeData((prev) => ({
       ...prev,
-      [section]: data
+      [section]: data,
     }));
   };
 
@@ -204,12 +221,13 @@ const Builder = () => {
 
   const completedSteps = currentStep;
   const remainingSteps = steps.length - currentStep - 1;
-  const nextSectionTitle = steps[currentStep + 1]?.title ?? "Preview & Generate";
+  const nextSectionTitle =
+    steps[currentStep + 1]?.title ?? "Preview & Generate";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 dark:from-gray-950 dark:via-blue-950/20 dark:to-purple-950/10 transition-colors duration-300">
       {/* Animated Navigation */}
-      <motion.nav 
+      <motion.nav
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -218,12 +236,11 @@ const Builder = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <Link to="/" className="flex items-center space-x-2 group">
-              <motion.div 
-                whileHover={{ rotate: 360 }}
+              <motion.div
                 transition={{ duration: 0.6 }}
-                className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden"
+                className="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden"
               >
-                <img alt="website" src="./websitelogo.png"/>
+                <img alt="website" src="./websitelogo.png" />
               </motion.div>
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 urCV.ai
@@ -252,7 +269,11 @@ const Builder = () => {
                     className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-all duration-300"
                     asChild
                   >
-                    <Link to="/" aria-label="Back to main page" className="flex items-center gap-1">
+                    <Link
+                      to="/"
+                      aria-label="Back to main page"
+                      className="flex items-center gap-1"
+                    >
                       <Home className="w-4 h-4" />
                       <span>Back Home</span>
                     </Link>
@@ -268,7 +289,11 @@ const Builder = () => {
                     className="border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-300 hover:text-white hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 dark:hover:from-blue-700 dark:hover:to-purple-700 transition-all duration-300 shadow-sm hover:shadow-md"
                     asChild
                   >
-                    <Link to="/templates" aria-label="Go to templates page" className="flex items-center gap-1">
+                    <Link
+                      to="/templates"
+                      aria-label="Go to templates page"
+                      className="flex items-center gap-1"
+                    >
                       <LayoutTemplate className="w-4 h-4" />
                       <span>Templates</span>
                     </Link>
@@ -281,7 +306,7 @@ const Builder = () => {
       </motion.nav>
 
       {/* Animated Progress Bar */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6 }}
@@ -300,13 +325,14 @@ const Builder = () => {
                 <motion.div
                   animate={{
                     scale: currentStep === index ? 1.1 : 1,
-                    backgroundColor: index <= currentStep 
-                      ? "rgb(37, 99, 235)" 
-                      : "rgb(229, 231, 235)"
+                    backgroundColor:
+                      index <= currentStep
+                        ? "rgb(37, 99, 235)"
+                        : "rgb(229, 231, 235)",
                   }}
                   className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 ${
-                    index <= currentStep 
-                      ? "bg-blue-600 text-white shadow-lg shadow-blue-500/50" 
+                    index <= currentStep
+                      ? "bg-blue-600 text-white shadow-lg shadow-blue-500/50"
                       : "bg-gray-300 dark:bg-gray-700 text-gray-500"
                   }`}
                 >
@@ -331,7 +357,9 @@ const Builder = () => {
           <div className="relative h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
-              animate={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+              animate={{
+                width: `${((currentStep + 1) / steps.length) * 100}%`,
+              }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"
             />
@@ -348,10 +376,7 @@ const Builder = () => {
       {/* Mobile Preview Toggle Button - Only on mobile */}
       {isMobile && (
         <div className="container mx-auto px-4 mb-4">
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
               variant="outline"
               className="w-full flex items-center justify-center gap-2 border-2 hover:border-blue-400 transition-all duration-300"
@@ -359,7 +384,9 @@ const Builder = () => {
             >
               <FileText className="w-4 h-4" />
               {showMobilePreview ? "Hide Preview" : "Show Preview"}
-              <ArrowRight className={`w-4 h-4 transition-transform duration-300 ${showMobilePreview ? 'rotate-90' : ''}`} />
+              <ArrowRight
+                className={`w-4 h-4 transition-transform duration-300 ${showMobilePreview ? "rotate-90" : ""}`}
+              />
             </Button>
           </motion.div>
         </div>
@@ -374,21 +401,21 @@ const Builder = () => {
             <Card className="p-4 shadow-xl border-0 dark:bg-gray-900/90 dark:border-gray-800 backdrop-blur-sm bg-white/90">
               <Tabs defaultValue="form" className="w-full">
                 <TabsList className="grid w-full grid-cols-3 mb-4 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl transition-all duration-300">
-                  <TabsTrigger 
-                    value="form" 
+                  <TabsTrigger
+                    value="form"
                     className="rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 data-[state=active]:shadow-md transition-all duration-300 hover:scale-105"
                   >
                     Form
                   </TabsTrigger>
-                  <TabsTrigger 
-                    value="analysis" 
+                  <TabsTrigger
+                    value="analysis"
                     className="rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 data-[state=active]:shadow-md transition-all duration-300 hover:scale-105"
                   >
                     <Bot className="w-4 h-4 mr-2" />
                     AI
                   </TabsTrigger>
-                  <TabsTrigger 
-                    value="generate" 
+                  <TabsTrigger
+                    value="generate"
                     className="rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 data-[state=active]:shadow-md transition-all duration-300 hover:scale-105"
                   >
                     Generate
@@ -405,20 +432,21 @@ const Builder = () => {
                       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     >
                       <div className="mb-4">
-                        <motion.h2 
+                        <motion.h2
                           initial={{ opacity: 0, y: -10 }}
                           animate={{ opacity: 1, y: 0 }}
                           className="text-xl font-bold text-gray-900 dark:text-white mb-2"
                         >
                           {steps[currentStep].title}
                         </motion.h2>
-                        <motion.p 
+                        <motion.p
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.1 }}
                           className="text-gray-600 dark:text-gray-400 text-sm"
                         >
-                          Fill in your {steps[currentStep].title.toLowerCase()} details
+                          Fill in your {steps[currentStep].title.toLowerCase()}{" "}
+                          details
                         </motion.p>
                       </div>
 
@@ -449,11 +477,13 @@ const Builder = () => {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                           >
-                            <Button 
+                            <Button
                               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white flex items-center space-x-2 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 group relative overflow-hidden"
                               onClick={() => setShowGenerateModal(true)}
                             >
-                              <span className="relative z-10">Generate Resume</span>
+                              <span className="relative z-10">
+                                Generate Resume
+                              </span>
                               <motion.div
                                 animate={{
                                   scale: [1, 1.2, 1],
@@ -484,15 +514,18 @@ const Builder = () => {
                       </div>
 
                       <div className="mt-6 grid gap-4">
-                        <motion.div 
+                        <motion.div
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.3 }}
                           className="rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900 text-white p-4 shadow-xl border border-white/10"
                         >
-                          <p className="text-xs uppercase tracking-[0.2em] text-white/70">Builder pulse</p>
+                          <p className="text-xs uppercase tracking-[0.2em] text-white/70">
+                            Builder pulse
+                          </p>
                           <h3 className="mt-2 text-xl font-semibold">
-                            {completedSteps + 1} / {steps.length} sections complete
+                            {completedSteps + 1} / {steps.length} sections
+                            complete
                           </h3>
                           <p className="mt-2 text-sm text-white/80">
                             {remainingSteps >= 0
@@ -525,7 +558,10 @@ const Builder = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
                   >
-                    <ResumeGenerator data={resumeData} templateName={templateName} />
+                    <ResumeGenerator
+                      data={resumeData}
+                      templateName={templateName}
+                    />
                   </motion.div>
                 </TabsContent>
               </Tabs>
@@ -540,28 +576,48 @@ const Builder = () => {
               >
                 <Card className="shadow-xl border-0 overflow-hidden flex flex-col bg-gradient-to-br from-gray-100 to-gray-50 dark:from-gray-900 dark:to-gray-800">
                   <div className="p-4 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Preview</h2>
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                      Preview
+                    </h2>
                     <div className="mb-2">
-                      <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Choose Template</label>
+                      <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Choose Template
+                      </label>
                       <div className="grid grid-cols-3 gap-2">
-                        {(['default', 'modern', 'professional', 'creative', 'minimalist', 'bold'] as const).map((template) => (
+                        {(
+                          [
+                            "default",
+                            "modern",
+                            "professional",
+                            "creative",
+                            "minimalist",
+                            "bold",
+                          ] as const
+                        ).map((template) => (
                           <motion.div
                             key={template}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                           >
                             <Button
-                              variant={templateName === template ? 'default' : 'outline'}
+                              variant={
+                                templateName === template
+                                  ? "default"
+                                  : "outline"
+                              }
                               className={`text-[10px] h-8 px-2 w-full transition-all duration-300 ${
-                                templateName === template 
-                                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' 
-                                  : ''
+                                templateName === template
+                                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+                                  : ""
                               }`}
                               onClick={() => setTemplateName(template)}
                             >
-                              {template === 'professional' ? 'Pro' : 
-                               template === 'minimalist' ? 'Minimal' : 
-                               template.charAt(0).toUpperCase() + template.slice(1)}
+                              {template === "professional"
+                                ? "Pro"
+                                : template === "minimalist"
+                                  ? "Minimal"
+                                  : template.charAt(0).toUpperCase() +
+                                    template.slice(1)}
                             </Button>
                           </motion.div>
                         ))}
@@ -569,14 +625,17 @@ const Builder = () => {
                     </div>
                   </div>
                   <div className="flex-1 overflow-auto bg-gray-200 dark:bg-gray-950 p-4 min-h-[400px] flex justify-center">
-                    <motion.div 
+                    <motion.div
                       key={templateName}
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.4 }}
-                      className={`w-full ${templateName === 'creative' ? 'max-w-full' : 'max-w-[800px]'} bg-white dark:bg-gray-900 shadow-2xl transition-all duration-300 ease-in-out`}
+                      className={`w-full ${templateName === "creative" ? "max-w-full" : "max-w-[800px]"} bg-white dark:bg-gray-900 shadow-2xl transition-all duration-300 ease-in-out`}
                     >
-                      <ResumePreview data={resumeData} templateName={templateName} />
+                      <ResumePreview
+                        data={resumeData}
+                        templateName={templateName}
+                      />
                     </motion.div>
                   </div>
                 </Card>
@@ -593,21 +652,21 @@ const Builder = () => {
             >
               <Tabs defaultValue="form" className="w-full">
                 <TabsList className="grid w-full grid-cols-3 mb-6 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl transition-all duration-300">
-                  <TabsTrigger 
-                    value="form" 
+                  <TabsTrigger
+                    value="form"
                     className="rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 data-[state=active]:shadow-md transition-all duration-300 hover:scale-105"
                   >
                     Resume Form
                   </TabsTrigger>
-                  <TabsTrigger 
-                    value="analysis" 
+                  <TabsTrigger
+                    value="analysis"
                     className="rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 data-[state=active]:shadow-md transition-all duration-300 hover:scale-105"
                   >
                     <Bot className="w-4 h-4 mr-2" />
                     AI Analysis
                   </TabsTrigger>
-                  <TabsTrigger 
-                    value="generate" 
+                  <TabsTrigger
+                    value="generate"
                     className="rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 data-[state=active]:shadow-md transition-all duration-300 hover:scale-105"
                   >
                     Generate
@@ -624,20 +683,21 @@ const Builder = () => {
                       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     >
                       <div className="mb-6">
-                        <motion.h2 
+                        <motion.h2
                           initial={{ opacity: 0, y: -10 }}
                           animate={{ opacity: 1, y: 0 }}
                           className="text-2xl font-bold text-gray-900 dark:text-white mb-2"
                         >
                           {steps[currentStep].title}
                         </motion.h2>
-                        <motion.p 
+                        <motion.p
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.1 }}
                           className="text-gray-600 dark:text-gray-400"
                         >
-                          Fill in your {steps[currentStep].title.toLowerCase()} details
+                          Fill in your {steps[currentStep].title.toLowerCase()}{" "}
+                          details
                         </motion.p>
                       </div>
 
@@ -668,11 +728,13 @@ const Builder = () => {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                           >
-                            <Button 
+                            <Button
                               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white flex items-center space-x-2 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 group relative overflow-hidden"
                               onClick={() => setShowGenerateModal(true)}
                             >
-                              <span className="relative z-10">Generate Resume</span>
+                              <span className="relative z-10">
+                                Generate Resume
+                              </span>
                               <motion.div
                                 animate={{
                                   scale: [1, 1.2, 1],
@@ -703,15 +765,18 @@ const Builder = () => {
                       </div>
 
                       <div className="mt-6 grid gap-4 lg:grid-cols-2">
-                        <motion.div 
+                        <motion.div
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.3 }}
                           className="rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900 text-white p-6 shadow-xl border border-white/10"
                         >
-                          <p className="text-xs uppercase tracking-[0.2em] text-white/70">Builder pulse</p>
+                          <p className="text-xs uppercase tracking-[0.2em] text-white/70">
+                            Builder pulse
+                          </p>
                           <h3 className="mt-2 text-2xl font-semibold">
-                            {completedSteps + 1} / {steps.length} sections complete
+                            {completedSteps + 1} / {steps.length} sections
+                            complete
                           </h3>
                           <p className="mt-3 text-sm text-white/80">
                             {remainingSteps >= 0
@@ -725,11 +790,17 @@ const Builder = () => {
                           transition={{ delay: 0.4 }}
                         >
                           <Card className="p-5 border-dashed border-2 border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-300">
-                            <p className="text-sm font-semibold text-gray-900 dark:text-white">Quick polish checklist</p>
+                            <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                              Quick polish checklist
+                            </p>
                             <ul className="mt-3 space-y-2 text-sm text-gray-600 dark:text-gray-300 list-disc list-inside">
                               <li>Lead bullets with strong action verbs.</li>
-                              <li>Back wins with data (e.g. "Cut costs by 12%").</li>
-                              <li>Keep sentences under two lines for readability.</li>
+                              <li>
+                                Back wins with data (e.g. "Cut costs by 12%").
+                              </li>
+                              <li>
+                                Keep sentences under two lines for readability.
+                              </li>
                             </ul>
                           </Card>
                         </motion.div>
@@ -758,7 +829,10 @@ const Builder = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
                   >
-                    <ResumeGenerator data={resumeData} templateName={templateName} />
+                    <ResumeGenerator
+                      data={resumeData}
+                      templateName={templateName}
+                    />
                   </motion.div>
                 </TabsContent>
               </Tabs>
@@ -778,28 +852,46 @@ const Builder = () => {
               className="shadow-xl border-0 overflow-hidden flex flex-col h-screen bg-gradient-to-br from-gray-100 to-gray-50 dark:from-gray-900 dark:to-gray-800 transition-none hidden md:flex"
             >
               <div className="p-4 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Design & Preview</h2>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                  Design & Preview
+                </h2>
                 <div className="mb-2">
-                  <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Choose Template</label>
+                  <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Choose Template
+                  </label>
                   <div className="grid grid-cols-3 gap-2">
-                    {(['default', 'modern', 'professional', 'creative', 'minimalist', 'bold'] as const).map((template) => (
+                    {(
+                      [
+                        "default",
+                        "modern",
+                        "professional",
+                        "creative",
+                        "minimalist",
+                        "bold",
+                      ] as const
+                    ).map((template) => (
                       <motion.div
                         key={template}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
                         <Button
-                          variant={templateName === template ? 'default' : 'outline'}
+                          variant={
+                            templateName === template ? "default" : "outline"
+                          }
                           className={`text-[10px] h-8 px-2 w-full transition-all duration-300 ${
-                            templateName === template 
-                              ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' 
-                              : ''
+                            templateName === template
+                              ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+                              : ""
                           }`}
                           onClick={() => setTemplateName(template)}
                         >
-                          {template === 'professional' ? 'Pro' : 
-                           template === 'minimalist' ? 'Minimal' : 
-                           template.charAt(0).toUpperCase() + template.slice(1).substring(0, 3)}
+                          {template === "professional"
+                            ? "Pro"
+                            : template === "minimalist"
+                              ? "Minimal"
+                              : template.charAt(0).toUpperCase() +
+                                template.slice(1).substring(0, 3)}
                         </Button>
                       </motion.div>
                     ))}
@@ -823,14 +915,17 @@ const Builder = () => {
                 </div>
               </div>
               <div className="flex-1 overflow-auto bg-gray-200 dark:bg-gray-950 p-4 min-h-[600px] flex justify-center">
-                <motion.div 
+                <motion.div
                   key={templateName}
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.4 }}
-                  className={`w-full ${templateName === 'creative' ? 'max-w-full' : 'max-w-[800px]'} bg-white dark:bg-gray-900 shadow-2xl transition-all duration-300 ease-in-out`}
+                  className={`w-full ${templateName === "creative" ? "max-w-full" : "max-w-[800px]"} bg-white dark:bg-gray-900 shadow-2xl transition-all duration-300 ease-in-out`}
                 >
-                  <ResumePreview data={resumeData} templateName={templateName} />
+                  <ResumePreview
+                    data={resumeData}
+                    templateName={templateName}
+                  />
                 </motion.div>
               </div>
             </Card>
@@ -855,11 +950,15 @@ const Builder = () => {
           <DialogHeader>
             <DialogTitle>Export your resume</DialogTitle>
           </DialogHeader>
-          <ResumeDownloadOptions data={resumeData} templateName={templateName} showHeading={false} />
+          <ResumeDownloadOptions
+            data={resumeData}
+            templateName={templateName}
+            showHeading={false}
+          />
         </DialogContent>
       </Dialog>
     </div>
   );
-}
+};
 
 export default Builder;

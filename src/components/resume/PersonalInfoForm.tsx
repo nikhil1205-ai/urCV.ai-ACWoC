@@ -10,9 +10,9 @@ interface PersonalInfoFormProps {
 
 const PersonalInfoForm = ({ data, updateData }: PersonalInfoFormProps) => {
   const handleInputChange = (field: string, value: string) => {
-    updateData('personalInfo', {
+    updateData("personalInfo", {
       ...data.personalInfo,
-      [field]: value
+      [field]: value,
     });
   };
 
@@ -24,7 +24,7 @@ const PersonalInfoForm = ({ data, updateData }: PersonalInfoFormProps) => {
           <Input
             id="fullName"
             value={data.personalInfo.fullName}
-            onChange={(e) => handleInputChange('fullName', e.target.value)}
+            onChange={(e) => handleInputChange("fullName", e.target.value)}
             placeholder="Alex Morgan"
             className="mt-1"
           />
@@ -35,7 +35,7 @@ const PersonalInfoForm = ({ data, updateData }: PersonalInfoFormProps) => {
             id="email"
             type="email"
             value={data.personalInfo.email}
-            onChange={(e) => handleInputChange('email', e.target.value)}
+            onChange={(e) => handleInputChange("email", e.target.value)}
             placeholder="alex.morgan@example.com"
             className="mt-1"
           />
@@ -48,7 +48,7 @@ const PersonalInfoForm = ({ data, updateData }: PersonalInfoFormProps) => {
           <Input
             id="phone"
             value={data.personalInfo.phone}
-            onChange={(e) => handleInputChange('phone', e.target.value)}
+            onChange={(e) => handleInputChange("phone", e.target.value)}
             placeholder="+1 (555) 012-3456"
             className="mt-1"
           />
@@ -58,7 +58,7 @@ const PersonalInfoForm = ({ data, updateData }: PersonalInfoFormProps) => {
           <Input
             id="location"
             value={data.personalInfo.location}
-            onChange={(e) => handleInputChange('location', e.target.value)}
+            onChange={(e) => handleInputChange("location", e.target.value)}
             placeholder="San Francisco, CA"
             className="mt-1"
           />
@@ -71,7 +71,7 @@ const PersonalInfoForm = ({ data, updateData }: PersonalInfoFormProps) => {
           <Input
             id="linkedin"
             value={data.personalInfo.linkedin}
-            onChange={(e) => handleInputChange('linkedin', e.target.value)}
+            onChange={(e) => handleInputChange("linkedin", e.target.value)}
             placeholder="linkedin.com/in/alexmorgan"
             className="mt-1"
           />
@@ -80,8 +80,8 @@ const PersonalInfoForm = ({ data, updateData }: PersonalInfoFormProps) => {
           <Label htmlFor="portfolio">Personal Portfolio</Label>
           <Input
             id="portfolio"
-            value={data.personalInfo.portfolio || ''}
-            onChange={(e) => handleInputChange('portfolio', e.target.value)}
+            value={data.personalInfo.portfolio || ""}
+            onChange={(e) => handleInputChange("portfolio", e.target.value)}
             placeholder="yourportfolio.com"
             className="mt-1"
           />
@@ -93,7 +93,7 @@ const PersonalInfoForm = ({ data, updateData }: PersonalInfoFormProps) => {
         <Textarea
           id="summary"
           value={data.personalInfo.summary}
-          onChange={(e) => handleInputChange('summary', e.target.value)}
+          onChange={(e) => handleInputChange("summary", e.target.value)}
           placeholder="Write a brief summary of your professional background and career objectives..."
           className="mt-1 min-h-[120px]"
         />

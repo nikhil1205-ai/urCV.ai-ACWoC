@@ -17,7 +17,7 @@ const HobbiesForm = ({ data, updateData }: HobbiesFormProps) => {
     if (newHobby.trim()) {
       const currentHobbies = data.hobbies || [];
       const updatedHobbies = [...currentHobbies, newHobby.trim()];
-      updateData('hobbies', updatedHobbies);
+      updateData("hobbies", updatedHobbies);
       setNewHobby("");
     }
   };
@@ -25,13 +25,15 @@ const HobbiesForm = ({ data, updateData }: HobbiesFormProps) => {
   const removeHobby = (index: number) => {
     const currentHobbies = data.hobbies || [];
     const updatedHobbies = currentHobbies.filter((_, i) => i !== index);
-    updateData('hobbies', updatedHobbies);
+    updateData("hobbies", updatedHobbies);
   };
 
   return (
     <div className="space-y-6">
       <Card className="p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Hobbies & Interests</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          Hobbies & Interests
+        </h3>
         <div className="flex flex-wrap gap-2 mb-4">
           {(data.hobbies || []).map((hobby, index) => (
             <Badge
@@ -49,7 +51,7 @@ const HobbiesForm = ({ data, updateData }: HobbiesFormProps) => {
             value={newHobby}
             onChange={(e) => setNewHobby(e.target.value)}
             placeholder="Add a hobby (e.g., Photography, Hiking, Chess)"
-            onKeyPress={(e) => e.key === 'Enter' && addHobby()}
+            onKeyPress={(e) => e.key === "Enter" && addHobby()}
           />
           <Button
             onClick={addHobby}
@@ -59,10 +61,13 @@ const HobbiesForm = ({ data, updateData }: HobbiesFormProps) => {
           </Button>
         </div>
       </Card>
-      
+
       <div className="text-sm text-gray-600 bg-indigo-50 p-4 rounded-lg">
         <p className="font-medium mb-2">💡 Why add hobbies?</p>
-        <p>Hobbies can show personality and soft skills. For example, team sports show teamwork, while chess might show strategic thinking.</p>
+        <p>
+          Hobbies can show personality and soft skills. For example, team sports
+          show teamwork, while chess might show strategic thinking.
+        </p>
       </div>
     </div>
   );
