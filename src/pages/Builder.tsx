@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Added useEffect
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -119,8 +119,24 @@ const Builder = () => {
 
   const [templateName, setTemplateName] = useState<'default' | 'modern' | 'professional' | 'creative' | 'minimalist' | 'bold'>('default');
   const [showGenerateModal, setShowGenerateModal] = useState(false);
+  
+  // Mobile state for preview visibility
+  const [showMobilePreview, setShowMobilePreview] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-    // Sliding window state
+  // Check if mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Desktop sliding window state - only used on desktop
   const [leftWidth, setLeftWidth] = useState(60); // percentage
   const [isResizing, setIsResizing] = useState(false);
 
@@ -128,14 +144,13 @@ const Builder = () => {
   const stopResize = () => setIsResizing(false);
 
   const handleResize = (e: MouseEvent) => {
-  if (!isResizing || e.buttons !== 1) return;
+    if (!isResizing || e.buttons !== 1) return;
 
-  const newWidth = (e.clientX / window.innerWidth) * 100;
-  if (newWidth > 30 && newWidth < 75) {
-    setLeftWidth(newWidth);
-  }
-};
-
+    const newWidth = (e.clientX / window.innerWidth) * 100;
+    if (newWidth > 30 && newWidth < 75) {
+      setLeftWidth(newWidth);
+    }
+  };
 
   if (isResizing) {
     window.addEventListener("mousemove", handleResize);
@@ -144,8 +159,6 @@ const Builder = () => {
     window.removeEventListener("mousemove", handleResize);
     window.removeEventListener("mouseup", stopResize);
   }
-
-
 
   const steps = [
     { title: "Personal Info", component: PersonalInfoForm },
@@ -187,18 +200,6 @@ const Builder = () => {
 
   const handleExtractedData = (extractedData: ResumeData) => {
     setResumeData(extractedData);
-  };
-
-  const slideVariants = {
-    initial: { opacity: 0, x: 50 },
-    in: { opacity: 1, x: 0 },
-    out: { opacity: 0, x: -50 }
-  };
-
-  const slideTransition = {
-    type: "tween",
-    ease: "anticipate",
-    duration: 0.4
   };
 
   const completedSteps = currentStep;
@@ -261,177 +262,342 @@ const Builder = () => {
         </div>
       </div>
 
+      {/* Mobile Preview Toggle Button - Only on mobile */}
+      {isMobile && (
+        <div className="container mx-auto px-4 mb-4">
+          <Button
+            variant="outline"
+            className="w-full flex items-center justify-center gap-2"
+            onClick={() => setShowMobilePreview(!showMobilePreview)}
+          >
+            <FileText className="w-4 h-4" />
+            {showMobilePreview ? "Hide Preview" : "Show Preview"}
+            <ArrowRight className={`w-4 h-4 transition-transform ${showMobilePreview ? 'rotate-90' : ''}`} />
+          </Button>
+        </div>
+      )}
+
       {/* Main Content */}
       <div className="container mx-auto px-4 pb-8">
-        <div className="flex gap-0 max-w-full mx-auto relative">
-          {/* Form Section */}
-          <Card
-            style={{ width: `${leftWidth}%` }}
-            className="p-6 shadow-md border-0 dark:bg-gray-900 dark:border-gray-800 animate-slide-in-left transition-none"
-          >
-            <Tabs defaultValue="form" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 transition-all duration-300 dark:bg-gray-800">
-                <TabsTrigger value="form" className="transition-all duration-200 hover:scale-105 dark:data-[state=active]:bg-gray-700">Resume Form</TabsTrigger>
-                <TabsTrigger value="analysis" className="transition-all duration-200 hover:scale-105 dark:data-[state=active]:bg-gray-700">
-                  <Bot className="w-4 h-4 mr-2" />
-                  AI Analysis
-                </TabsTrigger>
-                <TabsTrigger value="generate" className="transition-all duration-200 hover:scale-105 dark:data-[state=active]:bg-gray-700">Generate</TabsTrigger>
-              </TabsList>
+        {/* Mobile Layout - Stacked */}
+        {isMobile ? (
+          <div className="flex flex-col gap-4">
+            {/* Form Section - Always visible on mobile */}
+            <Card className="p-4 shadow-md border-0 dark:bg-gray-900 dark:border-gray-800">
+              <Tabs defaultValue="form" className="w-full">
+                <TabsList className="grid w-full grid-cols-3 transition-all duration-300 dark:bg-gray-800">
+                  <TabsTrigger value="form" className="transition-all duration-200 hover:scale-105 dark:data-[state=active]:bg-gray-700">Form</TabsTrigger>
+                  <TabsTrigger value="analysis" className="transition-all duration-200 hover:scale-105 dark:data-[state=active]:bg-gray-700">
+                    <Bot className="w-4 h-4 mr-2" />
+                    AI
+                  </TabsTrigger>
+                  <TabsTrigger value="generate" className="transition-all duration-200 hover:scale-105 dark:data-[state=active]:bg-gray-700">Generate</TabsTrigger>
+                </TabsList>
 
-              <TabsContent value="form" className="mt-6">
-                <div className="mb-6 animate-fade-in">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                    {steps[currentStep].title}
-                  </h2>
-                  <p className="text-gray-600">
-                    Fill in your {steps[currentStep].title.toLowerCase()} details
-                  </p>
-                </div>
-
-                <div className="transition-all duration-400 ease-in-out">
-                  <CurrentStepComponent
-                    data={resumeData}
-                    updateData={updateResumeData}
-                  />
-                </div>
-
-                {/* Navigation Buttons */}
-                <div className="flex flex-col gap-4 mt-8 sm:flex-row sm:items-center sm:justify-between">
-                  <Button
-                    variant="outline"
-                    onClick={handlePrevious}
-                    disabled={currentStep === 0}
-                    className="flex items-center space-x-2 transition-all duration-200 hover:scale-105 disabled:opacity-50"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    <span>Previous</span>
-                  </Button>
-
-                  {currentStep === steps.length - 1 ? (
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white flex items-center space-x-2 transition-all duration-200 hover:scale-105 hover:shadow-lg" onClick={() => setShowGenerateModal(true)}>
-                      <span>Generate Resume</span>
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={handleNext}
-                      className="bg-blue-600 hover:bg-blue-700 text-white flex items-center space-x-2 transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                    >
-                      <span>Next</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </Button>
-                  )}
-                </div>
-
-                <div className="mt-6 grid gap-4 lg:grid-cols-2">
-                  <div className="rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900 text-white p-6 shadow-xl border border-white/10">
-                    <p className="text-xs uppercase tracking-[0.2em] text-white/70">Builder pulse</p>
-                    <h3 className="mt-2 text-2xl font-semibold">
-                      {completedSteps+1} / {steps.length} sections complete
-                    </h3>
-                    <p className="mt-3 text-sm text-white/80">
-                      {remainingSteps >= 0
-                        ? `You're fine-tuning the ${steps[currentStep].title} section. Next up: ${nextSectionTitle}.`
-                        : "All sections complete — polish your summary and hit generate!"}
+                <TabsContent value="form" className="mt-4">
+                  <div className="mb-4 animate-fade-in">
+                    <h2 className="text-xl font-bold text-gray-900 mb-2">
+                      {steps[currentStep].title}
+                    </h2>
+                    <p className="text-gray-600 text-sm">
+                      Fill in your {steps[currentStep].title.toLowerCase()} details
                     </p>
                   </div>
-                  <Card className="p-5 border-dashed border-2 border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white">Quick polish checklist</p>
-                    <ul className="mt-3 space-y-2 text-sm text-gray-600 dark:text-gray-300 list-disc list-inside">
-                      <li>Lead bullets with strong action verbs.</li>
-                      <li>Back wins with data (e.g. "Cut costs by 12%" ).</li>
-                      <li>Keep sentences under two lines for readability.</li>
-                    </ul>
-                  </Card>
+
+                  <div className="transition-all duration-400 ease-in-out">
+                    <CurrentStepComponent
+                      data={resumeData}
+                      updateData={updateResumeData}
+                    />
+                  </div>
+
+                  {/* Navigation Buttons */}
+                  <div className="flex flex-col gap-4 mt-6 sm:flex-row sm:items-center sm:justify-between">
+                    <Button
+                      variant="outline"
+                      onClick={handlePrevious}
+                      disabled={currentStep === 0}
+                      className="flex items-center space-x-2 transition-all duration-200 hover:scale-105 disabled:opacity-50"
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                      <span>Previous</span>
+                    </Button>
+
+                    {currentStep === steps.length - 1 ? (
+                      <Button className="bg-blue-600 hover:bg-blue-700 text-white flex items-center space-x-2 transition-all duration-200 hover:scale-105 hover:shadow-lg" onClick={() => setShowGenerateModal(true)}>
+                        <span>Generate Resume</span>
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={handleNext}
+                        className="bg-blue-600 hover:bg-blue-700 text-white flex items-center space-x-2 transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                      >
+                        <span>Next</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
+
+                  <div className="mt-6 grid gap-4">
+                    <div className="rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900 text-white p-4 shadow-xl border border-white/10">
+                      <p className="text-xs uppercase tracking-[0.2em] text-white/70">Builder pulse</p>
+                      <h3 className="mt-2 text-xl font-semibold">
+                        {completedSteps+1} / {steps.length} sections complete
+                      </h3>
+                      <p className="mt-2 text-sm text-white/80">
+                        {remainingSteps >= 0
+                          ? `Next up: ${nextSectionTitle}`
+                          : "All sections complete!"}
+                      </p>
+                    </div>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="analysis" className="mt-4 animate-fade-in">
+                  <ResumeAnalysisComponent
+                    data={resumeData}
+                    onEnhance={handleEnhanceResume}
+                    onExtractedData={handleExtractedData}
+                  />
+                </TabsContent>
+
+                <TabsContent value="generate" className="mt-4 animate-fade-in">
+                  <ResumeGenerator data={resumeData} templateName={templateName} />
+                </TabsContent>
+              </Tabs>
+            </Card>
+
+            {/* Preview Section - Conditionally shown on mobile */}
+            {showMobilePreview && (
+              <Card className="shadow-md border-0 overflow-hidden flex flex-col">
+                <div className="p-4 bg-white border-b border-gray-200">
+                  <h2 className="text-xl font-bold text-gray-900 mb-2">Preview</h2>
+                  <div className="mb-2">
+                    <label className="block text-xs font-medium text-gray-700 mb-2">Choose Template</label>
+                    <div className="grid grid-cols-3 gap-2">
+                      <Button
+                        variant={templateName === 'default' ? 'default' : 'outline'}
+                        className="text-[10px] h-8 px-2"
+                        onClick={() => setTemplateName('default')}
+                      >
+                        Default
+                      </Button>
+                      <Button
+                        variant={templateName === 'modern' ? 'default' : 'outline'}
+                        className="text-[10px] h-8 px-2"
+                        onClick={() => setTemplateName('modern')}
+                      >
+                        Modern
+                      </Button>
+                      <Button
+                        variant={templateName === 'professional' ? 'default' : 'outline'}
+                        className="text-[10px] h-8 px-2"
+                        onClick={() => setTemplateName('professional')}
+                      >
+                        Pro
+                      </Button>
+                      <Button
+                        variant={templateName === 'creative' ? 'default' : 'outline'}
+                        className="text-[10px] h-8 px-2"
+                        onClick={() => setTemplateName('creative')}
+                      >
+                        Creative
+                      </Button>
+                      <Button
+                        variant={templateName === 'minimalist' ? 'default' : 'outline'}
+                        className="text-[10px] h-8 px-2"
+                        onClick={() => setTemplateName('minimalist')}
+                      >
+                        Minimal
+                      </Button>
+                      <Button
+                        variant={templateName === 'bold' ? 'default' : 'outline'}
+                        className="text-[10px] h-8 px-2"
+                        onClick={() => setTemplateName('bold')}
+                      >
+                        Bold
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-              </TabsContent>
-
-              <TabsContent value="analysis" className="mt-6 animate-fade-in">
-                <ResumeAnalysisComponent
-                  data={resumeData}
-                  onEnhance={handleEnhanceResume}
-                  onExtractedData={handleExtractedData}
-                />
-              </TabsContent>
-
-              <TabsContent value="generate" className="mt-6 animate-fade-in">
-                <ResumeGenerator data={resumeData} templateName={templateName} />
-              </TabsContent>
-            </Tabs>
-          </Card>
-
-        <div
-          onMouseDown={startResize}
-          onDoubleClick={(e) => e.preventDefault()}
-          className="w-2 cursor-col-resize bg-gray-300 dark:bg-gray-700 hover:bg-blue-500 transition-colors select-none"
-          style={{ userSelect: "none" }}
-        />
-
-
-
-          {/* Preview Section */}
-          <Card
-              style={{ width: `${100 - leftWidth}%` }}
-              className="shadow-md border-0 animate-slide-in-right overflow-hidden flex flex-col h-screen bg-gray-100 transition-none"
+                <div className="flex-1 overflow-auto bg-gray-200 p-4 min-h-[400px] flex justify-center">
+                  <div className={`w-full ${templateName === 'creative' ? 'max-w-full' : 'max-w-[800px]'} bg-white shadow-xl transition-all duration-300 ease-in-out`}>
+                    <ResumePreview data={resumeData} templateName={templateName} />
+                  </div>
+                </div>
+              </Card>
+            )}
+          </div>
+        ) : (
+          /* Desktop Layout - Side by Side with Resizer */
+          <div className="flex gap-0 max-w-full mx-auto relative">
+            {/* Form Section */}
+            <Card
+              style={{ width: `${leftWidth}%` }}
+              className="p-6 shadow-md border-0 dark:bg-gray-900 dark:border-gray-800 animate-slide-in-left transition-none"
             >
+              <Tabs defaultValue="form" className="w-full">
+                <TabsList className="grid w-full grid-cols-3 transition-all duration-300 dark:bg-gray-800">
+                  <TabsTrigger value="form" className="transition-all duration-200 hover:scale-105 dark:data-[state=active]:bg-gray-700">Resume Form</TabsTrigger>
+                  <TabsTrigger value="analysis" className="transition-all duration-200 hover:scale-105 dark:data-[state=active]:bg-gray-700">
+                    <Bot className="w-4 h-4 mr-2" />
+                    AI Analysis
+                  </TabsTrigger>
+                  <TabsTrigger value="generate" className="transition-all duration-200 hover:scale-105 dark:data-[state=active]:bg-gray-700">Generate</TabsTrigger>
+                </TabsList>
 
-            <div className="p-4 bg-white border-b border-gray-200">
-              <h2 className="text-xl font-bold text-gray-900 mb-2">Design & Preview</h2>
-              <div className="mb-2">
-                <label className="block text-xs font-medium text-gray-700 mb-2">Choose Template</label>
-                <div className="grid grid-cols-3 gap-2">
-                  <Button
-                    variant={templateName === 'default' ? 'default' : 'outline'}
-                    className="text-[10px] h-8 px-2"
-                    onClick={() => setTemplateName('default')}
-                  >
-                    Default
-                  </Button>
-                  <Button
-                    variant={templateName === 'modern' ? 'default' : 'outline'}
-                    className="text-[10px] h-8 px-2"
-                    onClick={() => setTemplateName('modern')}
-                  >
-                    Modern
-                  </Button>
-                  <Button
-                    variant={templateName === 'professional' ? 'default' : 'outline'}
-                    className="text-[10px] h-8 px-2"
-                    onClick={() => setTemplateName('professional')}
-                  >
-                    Pro
-                  </Button>
-                  <Button
-                    variant={templateName === 'creative' ? 'default' : 'outline'}
-                    className="text-[10px] h-8 px-2"
-                    onClick={() => setTemplateName('creative')}
-                  >
-                    Creative
-                  </Button>
-                  <Button
-                    variant={templateName === 'minimalist' ? 'default' : 'outline'}
-                    className="text-[10px] h-8 px-2"
-                    onClick={() => setTemplateName('minimalist')}
-                  >
-                    Minimal
-                  </Button>
-                  <Button
-                    variant={templateName === 'bold' ? 'default' : 'outline'}
-                    className="text-[10px] h-8 px-2"
-                    onClick={() => setTemplateName('bold')}
-                  >
-                    Bold
-                  </Button>
+                <TabsContent value="form" className="mt-6">
+                  <div className="mb-6 animate-fade-in">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                      {steps[currentStep].title}
+                    </h2>
+                    <p className="text-gray-600">
+                      Fill in your {steps[currentStep].title.toLowerCase()} details
+                    </p>
+                  </div>
+
+                  <div className="transition-all duration-400 ease-in-out">
+                    <CurrentStepComponent
+                      data={resumeData}
+                      updateData={updateResumeData}
+                    />
+                  </div>
+
+                  {/* Navigation Buttons */}
+                  <div className="flex flex-col gap-4 mt-8 sm:flex-row sm:items-center sm:justify-between">
+                    <Button
+                      variant="outline"
+                      onClick={handlePrevious}
+                      disabled={currentStep === 0}
+                      className="flex items-center space-x-2 transition-all duration-200 hover:scale-105 disabled:opacity-50"
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                      <span>Previous</span>
+                    </Button>
+
+                    {currentStep === steps.length - 1 ? (
+                      <Button className="bg-blue-600 hover:bg-blue-700 text-white flex items-center space-x-2 transition-all duration-200 hover:scale-105 hover:shadow-lg" onClick={() => setShowGenerateModal(true)}>
+                        <span>Generate Resume</span>
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={handleNext}
+                        className="bg-blue-600 hover:bg-blue-700 text-white flex items-center space-x-2 transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                      >
+                        <span>Next</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
+
+                  <div className="mt-6 grid gap-4 lg:grid-cols-2">
+                    <div className="rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900 text-white p-6 shadow-xl border border-white/10">
+                      <p className="text-xs uppercase tracking-[0.2em] text-white/70">Builder pulse</p>
+                      <h3 className="mt-2 text-2xl font-semibold">
+                        {completedSteps+1} / {steps.length} sections complete
+                      </h3>
+                      <p className="mt-3 text-sm text-white/80">
+                        {remainingSteps >= 0
+                          ? `You're fine-tuning the ${steps[currentStep].title} section. Next up: ${nextSectionTitle}.`
+                          : "All sections complete — polish your summary and hit generate!"}
+                      </p>
+                    </div>
+                    <Card className="p-5 border-dashed border-2 border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white">Quick polish checklist</p>
+                      <ul className="mt-3 space-y-2 text-sm text-gray-600 dark:text-gray-300 list-disc list-inside">
+                        <li>Lead bullets with strong action verbs.</li>
+                        <li>Back wins with data (e.g. "Cut costs by 12%" ).</li>
+                        <li>Keep sentences under two lines for readability.</li>
+                      </ul>
+                    </Card>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="analysis" className="mt-6 animate-fade-in">
+                  <ResumeAnalysisComponent
+                    data={resumeData}
+                    onEnhance={handleEnhanceResume}
+                    onExtractedData={handleExtractedData}
+                  />
+                </TabsContent>
+
+                <TabsContent value="generate" className="mt-6 animate-fade-in">
+                  <ResumeGenerator data={resumeData} templateName={templateName} />
+                </TabsContent>
+              </Tabs>
+            </Card>
+
+            {/* Resizer - Desktop Only */}
+            <div
+              onMouseDown={startResize}
+              onDoubleClick={(e) => e.preventDefault()}
+              className="w-2 cursor-col-resize bg-gray-300 dark:bg-gray-700 hover:bg-blue-500 transition-colors select-none hidden md:block"
+              style={{ userSelect: "none" }}
+            />
+
+            {/* Preview Section */}
+            <Card
+              style={{ width: `${100 - leftWidth}%` }}
+              className="shadow-md border-0 animate-slide-in-right overflow-hidden flex flex-col h-screen bg-gray-100 transition-none hidden md:flex"
+            >
+              <div className="p-4 bg-white border-b border-gray-200">
+                <h2 className="text-xl font-bold text-gray-900 mb-2">Design & Preview</h2>
+                <div className="mb-2">
+                  <label className="block text-xs font-medium text-gray-700 mb-2">Choose Template</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    <Button
+                      variant={templateName === 'default' ? 'default' : 'outline'}
+                      className="text-[10px] h-8 px-2"
+                      onClick={() => setTemplateName('default')}
+                    >
+                      Default
+                    </Button>
+                    <Button
+                      variant={templateName === 'modern' ? 'default' : 'outline'}
+                      className="text-[10px] h-8 px-2"
+                      onClick={() => setTemplateName('modern')}
+                    >
+                      Modern
+                    </Button>
+                    <Button
+                      variant={templateName === 'professional' ? 'default' : 'outline'}
+                      className="text-[10px] h-8 px-2"
+                      onClick={() => setTemplateName('professional')}
+                    >
+                      Pro
+                    </Button>
+                    <Button
+                      variant={templateName === 'creative' ? 'default' : 'outline'}
+                      className="text-[10px] h-8 px-2"
+                      onClick={() => setTemplateName('creative')}
+                    >
+                      Creative
+                    </Button>
+                    <Button
+                      variant={templateName === 'minimalist' ? 'default' : 'outline'}
+                      className="text-[10px] h-8 px-2"
+                      onClick={() => setTemplateName('minimalist')}
+                    >
+                      Minimal
+                    </Button>
+                    <Button
+                      variant={templateName === 'bold' ? 'default' : 'outline'}
+                      className="text-[10px] h-8 px-2"
+                      onClick={() => setTemplateName('bold')}
+                    >
+                      Bold
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex-1 overflow-auto bg-gray-200 p-4 min-h-[600px] flex justify-center">
-              <div className={`w-full ${templateName === 'creative' ? 'max-w-full' : 'max-w-[800px]'} bg-white shadow-xl transition-all duration-300 ease-in-out`}>
-                <ResumePreview data={resumeData} templateName={templateName} />
+              <div className="flex-1 overflow-auto bg-gray-200 p-4 min-h-[600px] flex justify-center">
+                <div className={`w-full ${templateName === 'creative' ? 'max-w-full' : 'max-w-[800px]'} bg-white shadow-xl transition-all duration-300 ease-in-out`}>
+                  <ResumePreview data={resumeData} templateName={templateName} />
+                </div>
               </div>
-            </div>
-          </Card>
-        </div>
+            </Card>
+          </div>
+        )}
       </div>
 
       {/* Floating Chat Bot */}
