@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Menu, X } from "lucide-react";
+import { ArrowLeft, Menu } from "lucide-react";
 import { Link } from "react-router-dom";
 import ThemeToggle from "@/components/ThemeToggle";
 import Footer from "@/components/layout/Footer";
@@ -63,7 +63,7 @@ const Templates = () => {
       id: 4,
       name: "Minimalist Clean",
       description: "Simple and elegant design focusing on content clarity",
-      image: "/Resume1.webp",
+      image: "/Resume4.jpg",
       category: "Minimalist",
       roles: ["software", "data"],
       type: "minimalist",
@@ -72,7 +72,7 @@ const Templates = () => {
       id: 5,
       name: "Bold Impact",
       description: "Strong, bold design that grabs recruiter attention",
-      image: "/Resume2.jpg",
+      image: "/Resume5.jpg",
       category: "Bold",
       roles: ["designer", "product"],
       type: "bold",
@@ -81,74 +81,11 @@ const Templates = () => {
       id: 6,
       name: "Tech Minimal Pro",
       description: "ATS-optimized minimal layout trusted by tech recruiters",
-      image: "/Resume3.jpg",
-      category: "Professional",
-      roles: ["software", "data"],
-      type: "modern",
-    },
-    {
-      id: 7,
-      name: "Startup Impact",
-      description: "Modern startup-style resume with strong visual hierarchy",
-      image: "/Resume4.jpg",
-      category: "Bold",
-      roles: ["product", "software"],
-      type: "bold",
-    },
-    {
-      id: 8,
-      name: "Elegant Executive",
-      description: "High-end executive resume with clean typography",
-      image: "/Resume5.jpg",
-      category: "Executive",
-      roles: ["executive"],
-      type: "professional",
-    },
-    {
-      id: 9,
-      name: "UX Portfolio Resume",
-      description: "Creative layout designed for UI/UX and visual designers",
-      image: "/Resume4.jpg",
-      category: "Creative",
-      roles: ["designer"],
-      type: "creative",
-    },
-    {
-      id: 10,
-      name: "Data Focused",
-      description: "Designed for data analysts with skills & metrics emphasis",
-      image: "/Resume5.jpg",
-      category: "Professional",
-      roles: ["data"],
-      type: "modern",
-    },
-    {
-      id: 11,
-      name: "FAANG Classic",
-      description: "Simple, recruiter-approved format for top tech companies",
       image: "/Resume6.jpg",
-      category: "Minimalist",
-      roles: ["software", "data"],
-      type: "minimalist",
-    },
-    {
-      id: 12,
-      name: "Creative Bold Grid",
-      description: "Bold grid-based layout for modern creative professionals",
-      image: "/Resume1.webp",
-      category: "Bold",
-      roles: ["designer", "product"],
-      type: "bold",
-    },
-    {
-      id: 13,
-      name: "Consulting Elite",
-      description: "Structured layout ideal for consulting & strategy roles",
-      image: "/Resume3.jpg",
       category: "Professional",
-      roles: ["product", "executive"],
-      type: "professional",
-    },
+      roles: ["software", "data"],
+      type: "modern",
+    }
   ];
 
   const filteredTemplates = templates.filter((template) => {
@@ -177,14 +114,6 @@ const Templates = () => {
       <SheetContent side="right" className="w-[85vw] sm:w-[400px]">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold">Filters</h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsMobileFiltersOpen(false)}
-            className="md:hidden" // Add this to hide on desktop if needed
-          >
-            <X className="w-5 h-5" />
-          </Button>
         </div>
 
         {/* Job Role Filter */}
